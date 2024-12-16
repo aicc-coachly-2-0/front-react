@@ -1,0 +1,24 @@
+공통 유틸리티 함수
+예시 :
+├── apiClient.js       // Axios 인스턴스 : API 요청을 공통적으로 처리
+├── constants.js       // 상수 : 로고, HTTP 상태 코드, 공통적으로 사용되는 문자열, 환경 설정 등
+├── format.js          // 데이터 포맷팅 함수 : 날짜, 시간, 숫자 포맷팅 등
+├── validation.js      // 입력값 검증 : 이메일이나 아이디, 비밀번호 검증 등 
+├── errorHandler.js    // 에러 처리 : 
+
+; export const handleApiError = (error) => {
+;   if (error.response) {
+;     console.error('API Error:', error.response.data);
+;     return error.response.data.message || '서버 오류가 발생했습니다.';
+;   } else if (error.request) {
+;     console.error('Network Error:', error.message);
+;     return '네트워크 연결에 문제가 있습니다.';
+;   } else {
+;     console.error('Unexpected Error:', error.message);
+;     return '예기치 못한 오류가 발생했습니다.';
+;   }}
+
+
+├── reactUtils.js      // React 관련 유틸리티 : React 전용 유틸리티, 예를 들어 debounce나 throttle
+└── mockData.js        // 더미 데이터 : 개발 및 테스트용으로 사용할 더미 데이터를 제공
+
