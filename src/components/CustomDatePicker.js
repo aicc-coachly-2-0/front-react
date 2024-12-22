@@ -11,13 +11,14 @@ import Stack from '@mui/material/Stack';
 import LinearProgress, {
   linearProgressClasses,
 } from '@mui/material/LinearProgress';
+import CustomIcons from '../internals/dashboardpage/CustomIcons';
 
 import {
   IndiaFlag,
   UsaFlag,
   BrazilFlag,
   GlobeFlag,
-} from '../../internals/dashboardpage/CustomIcons'; // 경로 수정
+} from '../internals/dashboardpage/CustomIcons'; // 경로 수정
 
 const data = [
   { label: 'India', value: 50000 },

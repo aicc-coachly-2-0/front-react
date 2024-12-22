@@ -3,7 +3,6 @@ import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Copyright from '../internals/Copyright';
 
 import ChartUserByCountry from './ChartUserByCountry'; // 경로 유지
 // import CustomizedTreeView from './CustomizedTreeView';
@@ -12,6 +11,7 @@ import HighlightedCard from './HighlightedCard'; // 경로 유지
 import PageViewsBarChart from './PageViewsBarChart'; // 경로 유지
 import SessionsChart from './SessionsChart'; // 경로 유지
 import StatCard from './StatCard'; // 경로 유지
+import Copyright from '../../internals/dashboardpage/Copyright';
 
 const data = [
   {

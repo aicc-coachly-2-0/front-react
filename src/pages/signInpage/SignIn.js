@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { CssBaseline, Typography, Stack, Card as MuiCard } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { SitemarkIcon } from '../../internals/dashboardpage/CustomIcons'; // 경로 수정
 import SignInForm from './SignInForm'; // 경로 유지
 import { useNavigate } from 'react-router-dom';
+import CustomIcons from '../../internals/dashboardpage/CustomIcons';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
