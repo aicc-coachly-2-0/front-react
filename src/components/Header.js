@@ -1,12 +1,10 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 // import CustomDatePicker from '../components/CustomDatePicker'; // 경로 수정
 import NavbarBreadcrumbs from '../components/NavbarBreadcrumbs'; // 경로 수정
-import MenuButton from '../components/MenuButton'; // 경로 수정
 import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown'; // 경로 수정
-import Search from '../components/Search'; // 경로 수정
-
+import LogoutBtuuon from './LogoutBtuuon';
+import HeaderCalendar from './HeaderCalendar';
 export default function Header() {
   return (
     <Stack
@@ -23,12 +21,10 @@ export default function Header() {
     >
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Search />
         {/* <CustomDatePicker /> */}
-        <MenuButton showBadge aria-label="Open notifications">
-          <NotificationsRoundedIcon />
-        </MenuButton>
+        <HeaderCalendar />
         <ColorModeIconDropdown />
+        <LogoutBtuuon />
       </Stack>
     </Stack>
   );

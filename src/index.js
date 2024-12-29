@@ -6,6 +6,7 @@ import Dashboard from './Dashboard';
 import MainGrid from './pages/dashboardpage/MainGrid';
 import AnotherPage from './pages/AnotherPage';
 import CircularProgressVariants from './components/CircularProgressVariants'; // 로딩 컴포넌트
+import NoticePage from './pages/NoticePage';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <MainGrid /> },
       { path: 'another', element: <AnotherPage /> },
+      { path: 'announcement', element: <NoticePage /> },
     ],
   },
   {

@@ -10,41 +10,27 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
-import ReportIcon from '@mui/icons-material/Report';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 
 const mainListItems = [
-  { text: '대시보드', icon: <HomeRoundedIcon />, path: '/dashboard' },
+  { text: '홈', icon: <HomeRoundedIcon />, path: '/dashboard' },
   {
-    text: '회원관리',
+    text: '유저 관리',
     icon: <PeopleRoundedIcon />,
-    path: '/dashboard/another',
+    path: '/dashboard/userManagement',
   },
   {
-    text: '커뮤니티',
+    text: '신고 접수',
     icon: <AssignmentRoundedIcon />,
-    path: '/dashboard/clients',
+    path: '/dashboard/reports',
   },
-  { text: '공지', icon: <EventNoteIcon />, path: '/dashboard/notices' },
-  { text: '신고', icon: <ReportIcon />, path: '/dashboard/reports' },
+  { text: '환불 처리', icon: <EventNoteIcon />, path: '/dashboard/refund' },
+  { text: '공지', icon: <EventNoteIcon />, path: '/dashboard/announcement' },
   {
     text: '문의사항',
     icon: <AnalyticsRoundedIcon />,
-    path: '/dashboard/reports',
+    path: '/dashboard/inquiry',
   },
-];
-
-const secondaryListItems = [
-  {
-    text: 'Settings',
-    icon: <SettingsRoundedIcon />,
-    path: '/dashboard/settings',
-  },
-  { text: 'About', icon: <InfoRoundedIcon />, path: '/dashboard/about' },
-  { text: 'Feedback', icon: <HelpRoundedIcon />, path: '/dashboard/feedback' },
 ];
 
 export default function MenuContent() {
@@ -55,21 +41,20 @@ export default function MenuContent() {
   };
 
   return (
-    <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
+    <Stack
+      sx={{
+        flexGrow: 1,
+        p: 1,
+        justifyContent: 'space-between',
+      }}
+    >
       <List dense>
         {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton onClick={() => handleNavigation(item.path)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-
-      <List dense>
-        {secondaryListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+          <ListItem
+            key={index}
+            disablePadding
+            sx={{ display: 'block', mt: 1, mb: 1 }}
+          >
             <ListItemButton onClick={() => handleNavigation(item.path)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
