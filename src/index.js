@@ -4,9 +4,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SignIn from './pages/signInpage/SignIn';
 import Dashboard from './Dashboard';
 import MainGrid from './pages/dashboardpage/MainGrid';
-import AnotherPage from './pages/AnotherPage';
+import UserManagementPage from './pages/UserManagementPage/UserManagementPage';
+import UserDetailManagementPage from './pages/UserManagementPage/UserDetailManagementPage';
 import CircularProgressVariants from './components/CircularProgressVariants'; // 로딩 컴포넌트
-import NoticePage from './pages/NoticePage';
+import NoticePage from './pages/NoticePage/NoticePage';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,11 @@ const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       { index: true, element: <MainGrid /> },
-      { path: 'another', element: <AnotherPage /> },
+      { path: 'UserManagementPage', element: <UserManagementPage /> },
+      {
+        path: 'UserDetailManagementPage',
+        element: <UserDetailManagementPage />,
+      },
       { path: 'announcement', element: <NoticePage /> },
     ],
   },

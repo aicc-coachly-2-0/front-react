@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useNavigate } from 'react-router-dom';
-import MenuButton from '../components/MenuButton'; // 경로 수정
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderColor: 'transparent',
