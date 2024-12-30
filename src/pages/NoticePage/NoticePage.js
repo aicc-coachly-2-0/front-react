@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -14,17 +14,41 @@ import {
   Select,
   MenuItem,
   Pagination,
+  IconButton,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 
 const NoticePage = () => {
-  const notices = Array.from({ length: 10 }, (_, index) => ({
-    id: 20 - index,
-    author: index % 2 === 0 ? '박준' : '이주',
-    title: `${20 - index} 번째 공지사항 제목입니다`,
-    date: '2024-12-21 / 05:23AM',
-    status: index % 2 === 0 ? '공지' : '정상',
-  }));
+  const navigate = useNavigate();
+  const [notices, setNotices] = useState(
+    Array.from({ length: 10 }, (_, index) => ({
+      id: 20 - index,
+      author: index % 2 === 0 ? '박준' : '이주',
+      title: `${20 - index} 번째 공지사항 제목입니다`,
+      date: '2024-12-21 / 05:23AM',
+      status: index % 2 === 0 ? '공지' : '정상',
+    }))
+  );
+
+  const handleAddNotice = () => {
+    navigate('/dashboard/notice/add');
+  };
+
+  const handleEditNotice = (id) => {
+    navigate(`/dashboard/notice/edit/${id}`);
+  };
+
+  const handleDeleteNotice = (id) => {
+    if (window.confirm('이 공지를 삭제하시겠습니까?')) {
+      setNotices((prevNotices) =>
+        prevNotices.filter((notice) => notice.id !== id)
+      );
+      alert('공지 삭제 완료');
+    }
+  };
 
   return (
     <Box
@@ -43,7 +67,7 @@ const NoticePage = () => {
         <Typography variant="h5" fontWeight="bold">
           공지
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={handleAddNotice}>
           항목 추가
         </Button>
       </Box>
@@ -87,6 +111,7 @@ const NoticePage = () => {
               <TableCell>제목</TableCell>
               <TableCell>게시일</TableCell>
               <TableCell>노출상태</TableCell>
+              <TableCell>작업</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -107,6 +132,20 @@ const NoticePage = () => {
                   >
                     {notice.status}
                   </Button>
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleEditNotice(notice.id)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDeleteNotice(notice.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

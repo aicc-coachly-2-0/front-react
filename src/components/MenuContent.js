@@ -40,7 +40,7 @@ const mainListItems = [
     icon: <MonetizationOnIcon />,
     path: '/dashboard/refund',
   },
-  { text: '공지', icon: <EventNoteIcon />, path: '/dashboard/announcement' },
+  { text: '공지', icon: <EventNoteIcon />, path: '/dashboard/notice' },
   {
     text: '문의사항',
     icon: <AnalyticsRoundedIcon />,

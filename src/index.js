@@ -2,17 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SignIn from './pages/signInpage/SignIn';
+
+// app이라고 생각하자 바꿔도 된다. app으로
 import Dashboard from './Dashboard';
+
+// 데시보드
 import MainGrid from './pages/dashboardpage/MainGrid';
+// 유저
 import UserManagementPage from './pages/UserManagementPage/UserManagementPage';
 import UserDetailManagementPage from './pages/UserManagementPage/UserDetailManagementPage';
+// 공지
 import NoticePage from './pages/NoticePage/NoticePage';
+import NoticeAddPage from './pages/NoticePage/NoticeAddPage';
+// 환불
 import RefundListPage from './pages/RefundManagement/RefundListPage';
 import RefundDetailPage from './pages/RefundManagement/RefundDetailPage';
+// 문의사항
 import FAQListPage from './pages/InquiryManagement/FAQListPage';
 import FAQDetailPage from './pages/InquiryManagement/FAQDetailPage';
 import QNAListPage from './pages/InquiryManagement/QNAListPage';
 import QNADetailPage from './pages/InquiryManagement/QNADetailPage';
+// 신고
 import {
   ReportCommentListPage,
   ReportUserListPage,
@@ -35,7 +45,15 @@ const router = createBrowserRouter([
       { index: true, element: <MainGrid /> },
       { path: 'UserManagementPage', element: <UserManagementPage /> },
       { path: 'UserManagementPage/:id', element: <UserDetailManagementPage /> },
-      { path: 'announcement', element: <NoticePage /> },
+      { path: 'notice', element: <NoticePage /> },
+      {
+        path: 'notice/add',
+        element: <NoticeAddPage mode="add" />,
+      },
+      {
+        path: 'notice/edit/:id',
+        element: <NoticeAddPage mode="edit" />,
+      },
       // 환불 페이지
       { path: 'refund', element: <RefundListPage /> },
       { path: 'refund/:id', element: <RefundDetailPage /> },
