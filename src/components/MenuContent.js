@@ -6,6 +6,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
@@ -50,9 +53,17 @@ const mainListItems = [
 
 export default function MenuContent() {
   const navigate = useNavigate();
+  const [openMenus, setOpenMenus] = React.useState({});
 
   const handleNavigation = (path) => {
     navigate(path);
+  };
+
+  const toggleMenu = (index) => {
+    setOpenMenus((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
   };
 
   return (
@@ -65,16 +76,46 @@ export default function MenuContent() {
     >
       <List dense>
         {mainListItems.map((item, index) => (
-          <ListItem
-            key={index}
-            disablePadding
-            sx={{ display: 'block', mt: 1, mb: 1 }}
-          >
-            <ListItemButton onClick={() => handleNavigation(item.path)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
+          <React.Fragment key={index}>
+            <ListItem disablePadding sx={{ display: 'block', mt: 1, mb: 1 }}>
+              <ListItemButton
+                onClick={() =>
+                  item.subItems
+                    ? toggleMenu(index)
+                    : handleNavigation(item.path)
+                }
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+                {item.subItems ? (
+                  openMenus[index] ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )
+                ) : null}
+              </ListItemButton>
+            </ListItem>
+            {item.subItems && (
+              <Collapse in={openMenus[index]} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {item.subItems.map((subItem, subIndex) => (
+                    <ListItem
+                      key={subIndex}
+                      disablePadding
+                      sx={{ pl: 4, mt: 0.5, mb: 0.5 }}
+                    >
+                      <ListItemButton
+                        onClick={() => handleNavigation(subItem.path)}
+                      >
+                        <ListItemText primary={subItem.text} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Collapse>
+            )}
+          </React.Fragment>
         ))}
       </List>
     </Stack>
