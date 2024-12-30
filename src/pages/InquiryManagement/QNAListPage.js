@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import InquiryListPage from './InquiryListPage';
 
 const QNAListPage = () => {
+  const navigate = useNavigate();
   const columns = [
     'NO',
     '회원(아이디)',
@@ -12,6 +14,7 @@ const QNAListPage = () => {
     '답변상태',
   ];
   const data = Array.from({ length: 10 }, (_, index) => ({
+    id: index + 1, // 상세 페이지 이동을 위한 고유 ID 추가
     NO: 30 - index,
     '회원(아이디)': `유저${index}(123***qw)`,
     카테고리: index % 3 === 0 ? '공지' : '일반',
@@ -21,11 +24,18 @@ const QNAListPage = () => {
     답변상태: index % 2 === 0 ? '완료' : '미완료',
   }));
 
+  const handleRowClick = (id) => {
+    navigate(`/dashboard/inquiry/qna/${id}`);
+  };
+
   return (
     <InquiryListPage
       title="문의 사항 관리 (Q&A)"
       columns={columns}
-      data={data}
+      data={data.map((row) => ({
+        ...row,
+        onClick: () => handleRowClick(row.id), // 클릭 이벤트 추가
+      }))}
     />
   );
 };

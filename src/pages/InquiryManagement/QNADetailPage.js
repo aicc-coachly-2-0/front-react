@@ -1,9 +1,17 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import InquiryDetailPage from './InquiryDetailPage';
 
 const QNADetailPage = () => {
+  const { id } = useParams(); // URL 파라미터에서 ID 가져오기
+
   const fields = [
-    { label: '제목', value: 'Q&A 제목', readOnly: false, fullWidth: true },
+    {
+      label: '제목',
+      value: `Q&A 제목 (ID: ${id})`,
+      readOnly: false,
+      fullWidth: true,
+    },
     { label: '카테고리', value: '일반', readOnly: false },
     { label: '작성자(아이디)', value: 'user123', readOnly: true },
     { label: '작성일', value: '2024-12-21', readOnly: true },

@@ -70,7 +70,11 @@ const InquiryListPage = ({ title, columns, data }) => {
           </TableHead>
           <TableBody>
             {data.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <TableRow
+                key={rowIndex}
+                onClick={row.onClick} // 클릭 이벤트 추가
+                sx={{ cursor: row.onClick ? 'pointer' : 'default' }}
+              >
                 <TableCell align="center">
                   <Checkbox />
                 </TableCell>
