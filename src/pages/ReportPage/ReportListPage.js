@@ -21,8 +21,8 @@ import { useNavigate } from 'react-router-dom';
 const ReportListPage = ({ title, columns, data, detailPath }) => {
   const navigate = useNavigate();
 
-  const handleRowClick = (id) => {
-    navigate(`${detailPath}/${id}`);
+  const handleRowClick = (index) => {
+    navigate(`${detailPath}/${index}`);
   };
 
   return (

@@ -16,8 +16,11 @@ import {
   Pagination,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom'; // 추가
 
 const UserManagementPage = () => {
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
   const users = Array.from({ length: 10 }, (_, index) => ({
     id: 20 - index,
     name: index % 2 === 0 ? '박준' : '이주',
@@ -29,6 +32,10 @@ const UserManagementPage = () => {
     status: index % 2 === 0 ? '정지' : '정상',
     activityState: index % 2 === 0 ? '활동' : '탈퇴',
   }));
+
+  const handleRowClick = (id) => {
+    navigate(`/dashboard/UserManagementPage/${id}`); // 클릭 시 해당 경로로 이동
+  };
 
   return (
     <Box
@@ -48,7 +55,7 @@ const UserManagementPage = () => {
           유저 관리
         </Typography>
         <Button variant="contained" color="primary">
-          항목 추가
+          + 항목 추가
         </Button>
       </Box>
 
@@ -104,7 +111,11 @@ const UserManagementPage = () => {
           </TableHead>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.id}>
+              <TableRow
+                key={user.id}
+                onClick={() => handleRowClick(user.id)} // 클릭 이벤트 추가
+                style={{ cursor: 'pointer' }} // 마우스 커서 변경
+              >
                 <TableCell>
                   <Checkbox />
                 </TableCell>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -28,26 +28,64 @@ const UserDetailManagementPage = () => {
     gender: '남성',
   };
 
-  const reports = [
+  const paymentHistory = [
     {
-      date: '2024-12-20',
-      reason: '폭력적인 언어를 지속적으로 사용했습니다.',
-      reporter: 'p3in',
+      id: 20,
+      serviceName: 'Coachly AI 서비스 사용',
+      amount: '₩9,900/month',
+      paymentDate: '2023-04-26',
+      status: '구독중',
     },
     {
-      date: '2024-12-11',
-      reason: '부적절한 댓글 작성.',
-      reporter: 'user12',
+      id: 19,
+      serviceName: 'Coachly AI 서비스 사용',
+      amount: '₩9,900/month',
+      paymentDate: '2023-04-26',
+      status: '구독중',
     },
   ];
 
-  const history = Array.from({ length: 5 }, (_, index) => ({
-    id: 20 - index,
-    serviceName: 'Coachly AI 서비스 사용',
-    amount: '₩9,900/month',
-    paymentDate: '2023-04-26',
-    status: index === 0 ? '미구독' : index === 1 ? '환불 신청중' : '구독중',
-  }));
+  const missionHistory = [
+    {
+      id: 1,
+      serviceName: '미션 1 완료',
+      amount: '-',
+      paymentDate: '2023-05-01',
+      status: '완료',
+    },
+    {
+      id: 2,
+      serviceName: '미션 2 실패',
+      amount: '-',
+      paymentDate: '2023-05-02',
+      status: '실패',
+    },
+  ];
+
+  const communityHistory = [
+    {
+      id: 1,
+      serviceName: '게시글 작성',
+      amount: '-',
+      paymentDate: '2023-06-01',
+      status: '완료',
+    },
+    {
+      id: 2,
+      serviceName: '댓글 작성',
+      amount: '-',
+      paymentDate: '2023-06-02',
+      status: '완료',
+    },
+  ];
+
+  const [currentHistory, setCurrentHistory] = useState(paymentHistory);
+  const [currentTitle, setCurrentTitle] = useState('결제 내역');
+
+  const handleHistoryChange = (history, title) => {
+    setCurrentHistory(history);
+    setCurrentTitle(title);
+  };
 
   return (
     <Box p={3} width="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
@@ -71,47 +109,6 @@ const UserDetailManagementPage = () => {
         </Grid>
       </Box>
 
-      {/* 계정 정지 관리 */}
-      <Box mb={4}>
-        <Typography variant="h6" fontWeight="bold" mb={2}>
-          계정 정지 관리
-        </Typography>
-        <Grid container spacing={3}>
-          {/* 신고 내역 */}
-          <Grid item xs={12} sm={6}>
-            <Box>
-              {reports.map((report, index) => (
-                <Box
-                  key={index}
-                  mb={1}
-                  p={1}
-                  bgcolor="#f9f9f9"
-                  borderRadius="4px"
-                >
-                  <Typography variant="body2">
-                    <strong>{report.date}</strong> - {report.reason} (
-                    {report.reporter})
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-          </Grid>
-          {/* 정지 관리 */}
-          <Grid item xs={12} sm={6}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <Typography>최근 정지 일자: 2024-12-20</Typography>
-              <Select defaultValue="정지" size="small">
-                <MenuItem value="정지">정지</MenuItem>
-                <MenuItem value="해제">해제</MenuItem>
-              </Select>
-              <Button variant="contained" color="error" sx={{ width: '100%' }}>
-                적용
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-
       {/* 유저 히스토리 */}
       <Box>
         <Typography variant="h6" fontWeight="bold" mb={2}>
@@ -119,15 +116,39 @@ const UserDetailManagementPage = () => {
         </Typography>
         {/* 히스토리 필터 버튼 */}
         <Box display="flex" gap={2} mb={3}>
-          <Button variant="contained" color="primary">
+          <Button
+            variant={
+              currentHistory === paymentHistory ? 'contained' : 'outlined'
+            }
+            color="primary"
+            onClick={() => handleHistoryChange(paymentHistory, '결제 내역')}
+          >
             결제 내역
           </Button>
-          <Button variant="outlined">미션 내역</Button>
-          <Button variant="outlined">커뮤니티 내역</Button>
-          <Button variant="outlined">피드 내역</Button>
-          <Button variant="outlined">문의 내역</Button>
-          <Button variant="outlined">신고 내역</Button>
+          <Button
+            variant={
+              currentHistory === missionHistory ? 'contained' : 'outlined'
+            }
+            onClick={() => handleHistoryChange(missionHistory, '미션 내역')}
+          >
+            미션 내역
+          </Button>
+          <Button
+            variant={
+              currentHistory === communityHistory ? 'contained' : 'outlined'
+            }
+            onClick={() =>
+              handleHistoryChange(communityHistory, '커뮤니티 내역')
+            }
+          >
+            커뮤니티 내역
+          </Button>
         </Box>
+
+        {/* 히스토리 테이블 제목 */}
+        <Typography variant="h6" fontWeight="bold" mb={2}>
+          {currentTitle}
+        </Typography>
 
         {/* 히스토리 테이블 */}
         <TableContainer>
@@ -145,7 +166,7 @@ const UserDetailManagementPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {history.map((entry) => (
+              {currentHistory.map((entry) => (
                 <TableRow key={entry.id}>
                   <TableCell align="center">
                     <Checkbox />

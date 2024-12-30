@@ -34,10 +34,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <MainGrid /> },
       { path: 'UserManagementPage', element: <UserManagementPage /> },
-      {
-        path: 'UserDetailManagementPage',
-        element: <UserDetailManagementPage />,
-      },
+      { path: 'UserManagementPage/:id', element: <UserDetailManagementPage /> },
       { path: 'announcement', element: <NoticePage /> },
       // 환불 페이지
       { path: 'refund', element: <RefundListPage /> },
