@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import InquiryList from './InquiryList';
+import InquiryList from '../InquiryList';
 
 const FAQList = () => {
   const navigate = useNavigate();

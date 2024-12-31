@@ -9,10 +9,14 @@ import {
   TableHead,
   TableRow,
   Checkbox,
-  Pagination,
   Typography,
   TextField,
+  IconButton,
+  Pagination,
+  Select,
+  MenuItem,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const RefundList = () => {
   const rows = Array.from({ length: 10 }, (_, index) => ({
@@ -26,18 +30,34 @@ const RefundList = () => {
   }));
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ padding: 3, maxWidth: '1200px', margin: '0 auto' }}>
+      <Typography variant="h5" fontWeight="bold" gutterBottom>
         환불 접수
       </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <TextField
-          variant="outlined"
-          placeholder="여기에 검색어를 입력하세요."
-          size="small"
-          sx={{ width: '300px' }}
-        />
-        <Button variant="contained">항목 추가</Button>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
+        }}
+      >
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Select defaultValue="전체" size="small" sx={{ width: 120 }}>
+            <MenuItem value="전체">전체</MenuItem>
+            <MenuItem value="최근 신고순">최근 신고순</MenuItem>
+          </Select>
+          <Select defaultValue="전체" size="small" sx={{ width: 120 }}>
+            <MenuItem value="전체">전체</MenuItem>
+            <MenuItem value="카테고리1">카테고리1</MenuItem>
+          </Select>
+          <TextField
+            variant="outlined"
+            placeholder="여기에 검색어를 입력하세요."
+            size="small"
+            sx={{ width: 300 }}
+          />
+        </Box>
       </Box>
       <TableContainer>
         <Table>
@@ -67,13 +87,20 @@ const RefundList = () => {
                 <TableCell>{row.appliedDate}</TableCell>
                 <TableCell>{row.processedDate}</TableCell>
                 <TableCell>{row.refundDate}</TableCell>
-                <TableCell>{row.status}</TableCell>
+                <TableCell>
+                  <Button variant="outlined" size="small">
+                    {row.status}
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Pagination count={3} sx={{ mt: 2 }} />
+      <Pagination
+        count={3}
+        sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
+      />
     </Box>
   );
 };

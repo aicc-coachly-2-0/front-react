@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import InquiryDetail from './InquiryDetail';
+import InquiryDetail from '../InquiryDetail';
 
 const FAQDetail = () => {
   const { id } = useParams(); // URL 파라미터에서 ID 가져오기

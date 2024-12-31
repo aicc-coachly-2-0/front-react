@@ -54,9 +54,9 @@ const UserManagement = () => {
         <Typography variant="h5" fontWeight="bold">
           유저 관리
         </Typography>
-        <Button variant="contained" color="primary">
+        {/* <Button variant="contained" color="primary">
           + 항목 추가
-        </Button>
+        </Button> */}
       </Box>
 
       {/* 검색 및 필터 영역 */}

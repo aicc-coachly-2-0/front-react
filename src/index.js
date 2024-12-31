@@ -18,10 +18,10 @@ import NoticeAdd from './pages/Notice/NoticeAdd';
 import RefundList from './pages/Refund/RefundList';
 import RefundDetail from './pages/Refund/RefundDetail';
 // 문의사항
-import FAQList from './pages/Inquiry/FAQList';
-import FAQDetail from './pages/Inquiry/FAQDetail';
-import QNAList from './pages/Inquiry/QNAList';
-import QNADetail from './pages/Inquiry/QNADetail';
+import FAQList from './pages/Inquiry/FAQ/FAQList';
+import FAQDetail from './pages/Inquiry/FAQ/FAQDetail';
+import QNAList from './pages/Inquiry/QNA/QNAList';
+import QNADetail from './pages/Inquiry/QNA/QNADetail';
 // 신고
 import {
   ReportCommentList,
@@ -43,8 +43,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: 'UserManagement ', element: <UserManagement /> },
-      { path: 'UserManagement /:id', element: <UserDetailManagement /> },
+      { path: 'UserManagement', element: <UserManagement /> },
+      { path: 'UserManagement/:id', element: <UserDetailManagement /> },
       { path: 'notice', element: <Notice /> },
       {
         path: 'notice/add',

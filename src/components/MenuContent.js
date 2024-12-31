@@ -21,7 +21,7 @@ const mainListItems = [
   {
     text: '유저 관리',
     icon: <PeopleRoundedIcon />,
-    path: '/dashboard/UserManagementPage',
+    path: '/dashboard/UserManagement',
   },
   {
     text: '신고 접수',

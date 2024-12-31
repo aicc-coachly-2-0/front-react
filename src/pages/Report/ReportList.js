@@ -36,9 +36,9 @@ const ReportList = ({ title, columns, data, detailPath }) => {
         <Typography variant="h5" fontWeight="bold">
           {title}
         </Typography>
-        <Button variant="contained" color="primary">
+        {/* <Button variant="contained" color="primary">
           항목 추가
-        </Button>
+        </Button> */}
       </Box>
 
       <Box

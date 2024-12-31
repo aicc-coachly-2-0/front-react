@@ -28,9 +28,6 @@ const InquiryList = ({ title, columns, data }) => {
         <Typography variant="h5" fontWeight="bold">
           {title}
         </Typography>
-        <Button variant="contained" color="primary">
-          항목 추가
-        </Button>
       </Box>
       <Box
         mb={3}
