@@ -16,7 +16,7 @@ import {
   Pagination,
 } from '@mui/material';
 
-const InquiryListPage = ({ title, columns, data }) => {
+const InquiryList = ({ title, columns, data }) => {
   return (
     <Box p={3} width="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
       <Box
@@ -95,4 +95,4 @@ const InquiryListPage = ({ title, columns, data }) => {
   );
 };
 
-export default InquiryListPage;
+export default InquiryList;

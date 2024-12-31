@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import InquiryListPage from './InquiryListPage';
+import InquiryList from './InquiryList';
 
-const QNAListPage = () => {
+const QNAList = () => {
   const navigate = useNavigate();
   const columns = [
     'NO',
@@ -29,7 +29,7 @@ const QNAListPage = () => {
   };
 
   return (
-    <InquiryListPage
+    <InquiryList
       title="문의 사항 관리 (Q&A)"
       columns={columns}
       data={data.map((row) => ({
@@ -40,4 +40,4 @@ const QNAListPage = () => {
   );
 };
 
-export default QNAListPage;
+export default QNAList;

@@ -17,7 +17,7 @@ import {
   Pagination,
 } from '@mui/material';
 
-const UserDetailManagementPage = () => {
+const UserDetailManagement = () => {
   const user = {
     id: 'abc1234',
     name: '김OO',
@@ -169,4 +169,4 @@ const UserDetailManagementPage = () => {
   );
 };
 
-export default UserDetailManagementPage;
+export default UserDetailManagement;

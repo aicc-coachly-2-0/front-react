@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import InquiryDetailPage from './InquiryDetailPage';
+import InquiryDetail from './InquiryDetail';
 
-const FAQDetailPage = () => {
+const FAQDetail = () => {
   const { id } = useParams(); // URL 파라미터에서 ID 가져오기
 
   const fields = [
@@ -18,9 +18,7 @@ const FAQDetailPage = () => {
     { label: '답변', value: 'FAQ 답변 내용', readOnly: false, fullWidth: true },
   ];
 
-  return (
-    <InquiryDetailPage title="문의 사항 관리 (FAQ)" fields={fields} isFAQ />
-  );
+  return <InquiryDetail title="문의 사항 관리 (FAQ)" fields={fields} isFAQ />;
 };
 
-export default FAQDetailPage;
+export default FAQDetail;

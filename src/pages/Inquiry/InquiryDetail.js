@@ -9,7 +9,7 @@ import {
   Grid,
 } from '@mui/material';
 
-const InquiryDetailPage = ({ title, fields, isFAQ }) => {
+const InquiryDetail = ({ title, fields, isFAQ }) => {
   return (
     <Box p={3} width="100%" maxWidth="800px" margin="0 auto">
       <Typography variant="h5" fontWeight="bold" mb={3}>
@@ -79,4 +79,4 @@ const InquiryDetailPage = ({ title, fields, isFAQ }) => {
   );
 };
 
-export default InquiryDetailPage;
+export default InquiryDetail;

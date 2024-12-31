@@ -9,7 +9,7 @@ import Header from './components/Header';
 import SideMenu from './components/SideMenu';
 import AppTheme from './shared-theme/AppTheme'; // 경로 수정
 
-export default function Dashboard(props) {
+export default function App(props) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />

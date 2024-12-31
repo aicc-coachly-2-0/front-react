@@ -47,7 +47,7 @@ const data = [
   },
 ];
 
-export default function MainGrid() {
+export default function Dashboard() {
   console.log('MainGrid is rendering...');
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>

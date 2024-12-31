@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import InquiryDetailPage from './InquiryDetailPage';
+import InquiryDetail from './InquiryDetail';
 
-const QNADetailPage = () => {
+const QNADetail = () => {
   const { id } = useParams(); // URL 파라미터에서 ID 가져오기
 
   const fields = [
@@ -18,7 +18,7 @@ const QNADetailPage = () => {
     { label: '내용', value: 'Q&A 내용', readOnly: false, fullWidth: true },
   ];
 
-  return <InquiryDetailPage title="문의 사항 관리 (Q&A)" fields={fields} />;
+  return <InquiryDetail title="문의 사항 관리 (Q&A)" fields={fields} />;
 };
 
-export default QNADetailPage;
+export default QNADetail;

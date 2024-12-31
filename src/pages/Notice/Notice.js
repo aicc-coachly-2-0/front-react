@@ -21,7 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 
-const NoticePage = () => {
+const Notice = () => {
   const navigate = useNavigate();
   const [notices, setNotices] = useState(
     Array.from({ length: 10 }, (_, index) => ({
@@ -161,4 +161,4 @@ const NoticePage = () => {
   );
 };
 
-export default NoticePage;
+export default Notice;

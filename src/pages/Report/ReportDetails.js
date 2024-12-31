@@ -10,7 +10,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-const ReportDetailPage = ({ title, fields }) => {
+const ReportDetail = ({ title, fields }) => {
   const theme = useTheme(); // MUI Theme 사용
   return (
     <Box
@@ -134,10 +134,10 @@ const ReportDetailPage = ({ title, fields }) => {
   );
 };
 
-const ReportDetailPages = {
+const ReportDetails = {
   Comment: () => (
     <Box width="100%" height="100%">
-      <ReportDetailPage
+      <ReportDetail
         title="신고 접수 - 댓글"
         fields={{
           general: [
@@ -167,7 +167,7 @@ const ReportDetailPages = {
   ),
   Post: () => (
     <Box width="100%" height="100%">
-      <ReportDetailPage
+      <ReportDetail
         title="신고 접수 - 게시글"
         fields={{
           general: [
@@ -193,7 +193,7 @@ const ReportDetailPages = {
   ),
   MissionAuth: () => (
     <Box width="100%" height="100%">
-      <ReportDetailPage
+      <ReportDetail
         title="신고 접수 - 미션 인증"
         fields={{
           general: [
@@ -223,7 +223,7 @@ const ReportDetailPages = {
   ),
   MissionRoom: () => (
     <Box width="100%" height="100%">
-      <ReportDetailPage
+      <ReportDetail
         title="신고 접수 - 미션방"
         fields={{
           general: [
@@ -253,7 +253,7 @@ const ReportDetailPages = {
   ),
   Feed: () => (
     <Box width="100%" height="100%">
-      <ReportDetailPage
+      <ReportDetail
         title="신고 접수 - 피드"
         fields={{
           general: [
@@ -283,7 +283,7 @@ const ReportDetailPages = {
   ),
   User: () => (
     <Box width="100%" height="100%">
-      <ReportDetailPage
+      <ReportDetail
         title="신고 접수 - 유저"
         fields={{
           general: [
@@ -306,4 +306,4 @@ const ReportDetailPages = {
   ),
 };
 
-export default ReportDetailPages;
+export default ReportDetails;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import InquiryListPage from './InquiryListPage';
+import InquiryList from './InquiryList';
 
-const FAQListPage = () => {
+const FAQList = () => {
   const navigate = useNavigate();
   const columns = ['NO', '작성자', '카테고리', '제목', '게시일', '노출상태'];
   const data = Array.from({ length: 10 }, (_, index) => ({
@@ -20,7 +20,7 @@ const FAQListPage = () => {
   };
 
   return (
-    <InquiryListPage
+    <InquiryList
       title="문의 사항 관리 (FAQ)"
       columns={columns}
       data={data.map((row) => ({
@@ -31,4 +31,4 @@ const FAQListPage = () => {
   );
 };
 
-export default FAQListPage;
+export default FAQList;

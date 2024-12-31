@@ -18,7 +18,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 // ReportListPage 기본 컴포넌트
-const ReportListPage = ({ title, columns, data, detailPath }) => {
+const ReportList = ({ title, columns, data, detailPath }) => {
   const navigate = useNavigate();
 
   const handleRowClick = (index) => {
@@ -107,12 +107,12 @@ const ReportListPage = ({ title, columns, data, detailPath }) => {
   );
 };
 
-export default ReportListPage;
+export default ReportList;
 
 // 리스트 페이지별 내보내기 (정확한 경로 확인 필요)
-export { ReportCommentListPage } from './Reportpagelist/ReportCommentListPage';
-export { ReportUserListPage } from './Reportpagelist/ReportUserListPage';
-export { ReportPostListPage } from './Reportpagelist/ReportPostListPage';
-export { ReportMissionAuthListPage } from './Reportpagelist/ReportMissionAuthListPage';
-export { ReportMissionRoomListPage } from './Reportpagelist/ReportMissionRoomListPage';
-export { ReportFeedListPage } from './Reportpagelist/ReportFeedListPage';
+export { ReportCommentList } from './Reportlist/ReportCommentList';
+export { ReportUserList } from './Reportlist/ReportUserList';
+export { ReportPostList } from './Reportlist/ReportPostList';
+export { ReportMissionAuthList } from './Reportlist/ReportMissionAuthList';
+export { ReportMissionRoomList } from './Reportlist/ReportMissionRoomList';
+export { ReportFeedList } from './Reportlist/ReportFeedList';

@@ -18,7 +18,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom'; // 추가
 
-const UserManagementPage = () => {
+const UserManagement = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   const users = Array.from({ length: 10 }, (_, index) => ({
@@ -160,4 +160,4 @@ const UserManagementPage = () => {
   );
 };
 
-export default UserManagementPage;
+export default UserManagement;

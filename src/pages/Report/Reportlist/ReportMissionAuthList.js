@@ -1,11 +1,11 @@
-import ReportListPage from '../ReportListPage';
+import ReportListPage from '../ReportList';
 
-export const ReportUserListPage = () => {
+export const ReportMissionAuthList = () => {
   const columns = [
     'NO',
     '신고 분류',
     '신고자(아이디)',
-    '신고대상(아이디)',
+    '미션명 제목',
     '신고일',
     '처리일',
     '처리 상태',
@@ -14,7 +14,7 @@ export const ReportUserListPage = () => {
     NO: 20 - index,
     '신고 분류': index % 3 === 0 ? '경고' : index % 3 === 1 ? '신고' : '처리',
     '신고자(아이디)': `유저${index}(123***qw)`,
-    '신고대상(아이디)': `유저대상${index}(456***qw)`,
+    '미션명 제목': `신고 미션명 제목입니다 (15자 미리보기 ${index})`,
     신고일: '2024-12-21 / 05:23AM',
     처리일: '2023-04-26',
     '처리 상태': '정상',
@@ -22,10 +22,10 @@ export const ReportUserListPage = () => {
 
   return (
     <ReportListPage
-      title="신고 접수 - 유저"
+      title="신고 접수 - 미션 인증"
       columns={columns}
       data={data}
-      detailPath="/dashboard/reports/users"
+      detailPath="/dashboard/reports/mission-auth"
     />
   );
 };

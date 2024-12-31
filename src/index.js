@@ -1,37 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import SignIn from './pages/signInpage/SignIn';
+import SignIn from './pages/signIn/SignIn';
 
 // app이라고 생각하자 바꿔도 된다. app으로
-import Dashboard from './Dashboard';
+import App from './App';
 
-// 데시보드
-import MainGrid from './pages/dashboardpage/MainGrid';
+// 대시보드
+import Dashboard from './pages/dashboard/Dashboard';
 // 유저
-import UserManagementPage from './pages/UserManagementPage/UserManagementPage';
-import UserDetailManagementPage from './pages/UserManagementPage/UserDetailManagementPage';
+import UserManagement from './pages/UserManagement/UserManagement';
+import UserDetailManagement from './pages/UserManagement/UserDetailManagement';
 // 공지
-import NoticePage from './pages/NoticePage/NoticePage';
-import NoticeAddPage from './pages/NoticePage/NoticeAddPage';
+import Notice from './pages/Notice/Notice';
+import NoticeAdd from './pages/Notice/NoticeAdd';
 // 환불
-import RefundListPage from './pages/RefundManagement/RefundListPage';
-import RefundDetailPage from './pages/RefundManagement/RefundDetailPage';
+import RefundList from './pages/Refund/RefundList';
+import RefundDetail from './pages/Refund/RefundDetail';
 // 문의사항
-import FAQListPage from './pages/InquiryManagement/FAQListPage';
-import FAQDetailPage from './pages/InquiryManagement/FAQDetailPage';
-import QNAListPage from './pages/InquiryManagement/QNAListPage';
-import QNADetailPage from './pages/InquiryManagement/QNADetailPage';
+import FAQList from './pages/Inquiry/FAQList';
+import FAQDetail from './pages/Inquiry/FAQDetail';
+import QNAList from './pages/Inquiry/QNAList';
+import QNADetail from './pages/Inquiry/QNADetail';
 // 신고
 import {
-  ReportCommentListPage,
-  ReportUserListPage,
-  ReportPostListPage,
-  ReportMissionAuthListPage,
-  ReportMissionRoomListPage,
-  ReportFeedListPage,
-} from './pages/ReportPage/ReportListPage';
-import ReportDetailPages from './pages/ReportPage/ReportDetailPages';
+  ReportCommentList,
+  ReportUserList,
+  ReportPostList,
+  ReportMissionAuthList,
+  ReportMissionRoomList,
+  ReportFeedList,
+} from './pages/Report/ReportList';
+import ReportDetails from './pages/Report/ReportDetails';
 
 const router = createBrowserRouter([
   {
@@ -40,52 +40,52 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <Dashboard />,
+    element: <App />,
     children: [
-      { index: true, element: <MainGrid /> },
-      { path: 'UserManagementPage', element: <UserManagementPage /> },
-      { path: 'UserManagementPage/:id', element: <UserDetailManagementPage /> },
-      { path: 'notice', element: <NoticePage /> },
+      { index: true, element: <Dashboard /> },
+      { path: 'UserManagement ', element: <UserManagement /> },
+      { path: 'UserManagement /:id', element: <UserDetailManagement /> },
+      { path: 'notice', element: <Notice /> },
       {
         path: 'notice/add',
-        element: <NoticeAddPage mode="add" />,
+        element: <NoticeAdd mode="add" />,
       },
       {
         path: 'notice/edit/:id',
-        element: <NoticeAddPage mode="edit" />,
+        element: <NoticeAdd mode="edit" />,
       },
       // 환불 페이지
-      { path: 'refund', element: <RefundListPage /> },
-      { path: 'refund/:id', element: <RefundDetailPage /> },
+      { path: 'refund', element: <RefundList /> },
+      { path: 'refund/:id', element: <RefundDetail /> },
       // 문의 사항 페이지
-      { path: 'inquiry/faq', element: <FAQListPage /> },
-      { path: 'inquiry/faq/:id', element: <FAQDetailPage /> },
-      { path: 'inquiry/qna', element: <QNAListPage /> },
-      { path: 'inquiry/qna/:id', element: <QNADetailPage /> },
+      { path: 'inquiry/faq', element: <FAQList /> },
+      { path: 'inquiry/faq/:id', element: <FAQDetail /> },
+      { path: 'inquiry/qna', element: <QNAList /> },
+      { path: 'inquiry/qna/:id', element: <QNADetail /> },
       // 신고 접수
-      { path: 'reports/comments', element: <ReportCommentListPage /> },
-      { path: 'reports/users', element: <ReportUserListPage /> },
-      { path: 'reports/posts', element: <ReportPostListPage /> },
-      { path: 'reports/mission-auth', element: <ReportMissionAuthListPage /> },
-      { path: 'reports/mission-room', element: <ReportMissionRoomListPage /> },
-      { path: 'reports/feeds', element: <ReportFeedListPage /> },
-      { path: 'reports/comments/:id', element: <ReportDetailPages.Comment /> },
-      { path: 'reports/users/:id', element: <ReportDetailPages.User /> },
-      { path: 'reports/posts/:id', element: <ReportDetailPages.Post /> },
+      { path: 'reports/comments', element: <ReportCommentList /> },
+      { path: 'reports/users', element: <ReportUserList /> },
+      { path: 'reports/posts', element: <ReportPostList /> },
+      { path: 'reports/mission-auth', element: <ReportMissionAuthList /> },
+      { path: 'reports/mission-room', element: <ReportMissionRoomList /> },
+      { path: 'reports/feeds', element: <ReportFeedList /> },
+      { path: 'reports/comments/:id', element: <ReportDetails.Comment /> },
+      { path: 'reports/users/:id', element: <ReportDetails.User /> },
+      { path: 'reports/posts/:id', element: <ReportDetails.Post /> },
       {
         path: 'reports/mission-auth/:id',
-        element: <ReportDetailPages.MissionAuth />,
+        element: <ReportDetails.MissionAuth />,
       },
       {
         path: 'reports/mission-room/:id',
-        element: <ReportDetailPages.MissionRoom />,
+        element: <ReportDetails.MissionRoom />,
       },
-      { path: 'reports/feeds/:id', element: <ReportDetailPages.Feed /> },
+      { path: 'reports/feeds/:id', element: <ReportDetails.Feed /> },
     ],
   },
   {
     path: '*', // 정의되지 않은 경로 처리
-    element: <Dashboard />,
+    element: <App />,
   },
 ]);
 
