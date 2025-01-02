@@ -43,23 +43,21 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Dashboard /> },
+      // 유저관리 페이지
       { path: 'UserManagement', element: <UserManagement /> },
       { path: 'UserManagement/:id', element: <UserDetailManagement /> },
+      // 공지 페이지
       { path: 'notice', element: <Notice /> },
       {
         path: 'notice/add',
-        element: <NoticeAdd mode="add" />,
-      },
-      {
-        path: 'notice/edit/:id',
-        element: <NoticeAdd mode="edit" />,
+        element: <NoticeAdd />,
       },
       // 환불 페이지
       { path: 'refund', element: <RefundList /> },
       { path: 'refund/:id', element: <RefundDetail /> },
       // 문의 사항 페이지
       { path: 'inquiry/faq', element: <FAQList /> },
-      { path: 'inquiry/faq/:id', element: <FAQDetail /> },
+      { path: 'inquiry/faq/add', element: <FAQDetail /> },
       { path: 'inquiry/qna', element: <QNAList /> },
       { path: 'inquiry/qna/:id', element: <QNADetail /> },
       // 신고 접수
