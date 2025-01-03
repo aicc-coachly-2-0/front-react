@@ -24,7 +24,7 @@ const FAQDetail = () => {
 
   const handleSave = () => {
     alert('FAQ 저장 완료');
-    navigate('/dashboard/faq');
+    navigate('/dashboard/inquiry/faq');
   };
 
   return (
@@ -120,7 +120,7 @@ const FAQDetail = () => {
           <Button
             variant="outlined"
             color="secondary"
-            onClick={() => navigate('/dashboard/faq')}
+            onClick={() => navigate('/dashboard/inquiry/faq')}
             sx={{ padding: '12px 24px', fontSize: '16px', mr: '16px' }}
           >
             취소
