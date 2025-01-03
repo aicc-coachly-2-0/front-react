@@ -31,6 +31,8 @@ const ReportDetail = ({ title, fields }) => {
       <Box
         mb={3}
         p={2}
+        width="100%"
+        height="100%"
         borderRadius="8px"
         bgcolor={theme.palette.background.paper} // 테마 카드 배경색 사용
         boxShadow={1}
@@ -58,6 +60,8 @@ const ReportDetail = ({ title, fields }) => {
         <Box
           mb={3}
           p={2}
+          width="100%"
+          height="100%"
           borderRadius="8px"
           bgcolor={theme.palette.background.paper}
           boxShadow={1}
@@ -84,6 +88,8 @@ const ReportDetail = ({ title, fields }) => {
       {/* 처리 정보 섹션 */}
       <Box
         p={2}
+        width="100%"
+        height="100%"
         borderRadius="8px"
         bgcolor={theme.palette.background.paper}
         boxShadow={1}
@@ -169,6 +175,8 @@ const ReportDetails = {
     <Box width="100%" height="100%">
       <ReportDetail
         title="신고 접수 - 게시글"
+        width="100%"
+        height="100%"
         fields={{
           general: [
             { label: '접수 번호', value: '23456', readOnly: true },

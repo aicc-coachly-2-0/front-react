@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -17,12 +17,59 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-// ReportListPage 기본 컴포넌트
 const ReportList = ({ title, columns, data, detailPath }) => {
   const navigate = useNavigate();
+  const itemsPerPage = 10;
+
+  const [filters, setFilters] = useState({
+    type: 'all',
+    order: 'recent',
+    search: '',
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // 필터링 및 정렬된 데이터 계산
+  const filteredData = useMemo(() => {
+    let filtered = [...data];
+
+    // 필터 적용
+    if (filters.type !== 'all') {
+      filtered = filtered.filter((item) => item.type === filters.type);
+    }
+
+    // 검색 적용
+    if (filters.search) {
+      filtered = filtered.filter((item) =>
+        Object.values(item).some((value) =>
+          String(value).toLowerCase().includes(filters.search.toLowerCase())
+        )
+      );
+    }
+
+    // 정렬 적용
+    filtered.sort((a, b) => {
+      if (filters.order === 'recent') {
+        return new Date(b.date) - new Date(a.date);
+      }
+      return new Date(a.date) - new Date(b.date);
+    });
+
+    return filtered;
+  }, [data, filters]);
+
+  // 페이지네이션 데이터
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleRowClick = (index) => {
     navigate(`${detailPath}/${index}`);
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
   return (
@@ -36,9 +83,6 @@ const ReportList = ({ title, columns, data, detailPath }) => {
         <Typography variant="h5" fontWeight="bold">
           {title}
         </Typography>
-        {/* <Button variant="contained" color="primary">
-          항목 추가
-        </Button> */}
       </Box>
 
       <Box
@@ -48,19 +92,38 @@ const ReportList = ({ title, columns, data, detailPath }) => {
         alignItems="center"
       >
         <Box display="flex" gap={2}>
-          <Select defaultValue="all" size="small">
+          <Select
+            value={filters.type}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, type: e.target.value }))
+            }
+            size="small"
+          >
             <MenuItem value="all">전체</MenuItem>
             <MenuItem value="warning">경고</MenuItem>
             <MenuItem value="report">신고</MenuItem>
             <MenuItem value="process">처리</MenuItem>
           </Select>
-          <Select defaultValue="recent" size="small">
+          <Select
+            value={filters.order}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, order: e.target.value }))
+            }
+            size="small"
+          >
             <MenuItem value="recent">최근 신고순</MenuItem>
             <MenuItem value="oldest">오래된 신고순</MenuItem>
           </Select>
         </Box>
         <Box display="flex" alignItems="center" gap={1}>
-          <TextField placeholder="여기에 검색어를 입력하세요" size="small" />
+          <TextField
+            placeholder="여기에 검색어를 입력하세요"
+            size="small"
+            value={filters.search}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, search: e.target.value }))
+            }
+          />
           <Button variant="outlined">검색</Button>
         </Box>
       </Box>
@@ -80,7 +143,7 @@ const ReportList = ({ title, columns, data, detailPath }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, rowIndex) => (
+            {paginatedData.map((row, rowIndex) => (
               <TableRow
                 key={rowIndex}
                 onClick={() => handleRowClick(row.NO)}
@@ -101,7 +164,12 @@ const ReportList = ({ title, columns, data, detailPath }) => {
       </TableContainer>
 
       <Box mt={3} display="flex" justifyContent="center">
-        <Pagination count={5} color="primary" />
+        <Pagination
+          count={Math.ceil(filteredData.length / itemsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
       </Box>
     </Box>
   );
