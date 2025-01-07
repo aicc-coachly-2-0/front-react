@@ -12,6 +12,13 @@ const FAQList = () => {
   const { items: faqs, status, error } = useSelector((state) => state.faqs);
   const navigate = useNavigate();
 
+  // 추가 페이지로 이동
+  const handleAddFAQ = () => navigate('/dashboard/inquiry/faq/add');
+   // 상세 페이지로 이동
+  const handleRowClick = (faq_number) => {
+    navigate(`/dashboard/inquiry/faq/${faq_number}`);
+  };
+
   // 선택된 FAQ 항목 ID 저장
   const [selectedFaqs, setSelectedFaqs] = useState([]);
   
@@ -66,8 +73,7 @@ const FAQList = () => {
     currentPage * itemsPerPage
   );
 
-  const handleAddFAQ = () => navigate('/dashboard/inquiry/faq/add');
-
+ 
   const handleDeleteSelected = () => {
     if (selectedFaqs.length === 0) {
       alert('삭제할 항목을 선택해주세요.');
@@ -167,24 +173,24 @@ const FAQList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedFaqs.map((faq) => (
-              <TableRow key={faq.faq_number}>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={selectedFaqs.includes(faq.faq_number)}
-                    onChange={() => handleCheckboxChange(faq.faq_number)}
-                  />
-                </TableCell>
-                <TableCell align="center">{faq.faq_number}</TableCell>
-                <TableCell align="center">{faq.admin_number}</TableCell>
-                <TableCell align="center">{faq.question_classification_number}</TableCell>
-                <TableCell align="center">{faq.content}</TableCell>
-                <TableCell align="center">
-                  {new Date(faq.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell align="center">{faq.state}</TableCell>
-              </TableRow>
-            ))}
+          {paginatedFaqs.map((faq) => (
+            <TableRow key={faq.faq_number} onClick={() => handleRowClick(faq.faq_number)}>
+              <TableCell align="center">
+                <Checkbox
+                  checked={selectedFaqs.includes(faq.faq_number)}
+                  onChange={() => handleCheckboxChange(faq.faq_number)}
+                />
+              </TableCell>
+              <TableCell align="center">{faq.faq_number}</TableCell>
+              <TableCell align="center">{faq.admin_number}</TableCell>
+              <TableCell align="center">{faq.question_classification_number}</TableCell>
+              <TableCell align="center">{faq.content}</TableCell>
+              <TableCell align="center">
+                {new Date(faq.created_at).toLocaleDateString()}
+              </TableCell>
+              <TableCell align="center">{faq.state}</TableCell>
+            </TableRow>
+          ))}
           </TableBody>
         </Table>
       </TableContainer>
