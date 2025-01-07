@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import ForgotPassword from './ForgotPassword';
 import { useDispatch } from 'react-redux';
-import { adminSignin } from '../../redux/slice/authSlice';
+import { adminSignin } from '../../redux/slices/authSlice';
 
 const SignInForm = ({ onLogin = () => {} }) => {
   const [emailError, setEmailError] = useState('');

@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slice/authSlice';
-import postReducer from './slice/postSlice';
-import feedReducer from './slice/feedSlice';
-import userReducer from './slice/userSlice';
-import missionReducer from './slice/missionSlice';
-import faqReducer from './slice/faqSlice';
-import qnaReducer from './slice/qnaSlice';
-import noticeReducer from './slice/noticeSlice';
-import reportReducer from './slice/reportSlice';
+import authReducer from './slices/authSlice';
+import postReducer from './slices/postSlice';
+import feedReducer from './slices/feedSlice';
+import userReducer from './slices/userSlice';
+import missionReducer from './slices/missionSlice';
+import faqReducer from './slices/faqSlice';
+import qnaReducer from './slices/qnaSlice';
+import noticeReducer from './slices/noticeSlice';
+import reportReducer from './slices/reportSlice';
 
 const store = configureStore({
   reducer: {

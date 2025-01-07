@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
   Button,
+  Select,
+  MenuItem,
   TextField,
   Table,
   TableBody,
@@ -11,34 +13,39 @@ import {
   TableHead,
   TableRow,
   Checkbox,
-  Select,
-  MenuItem,
   Pagination,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchNotices } from '../../redux/slices/noticeSlice';
+
 const Notice = () => {
   const navigate = useNavigate();
-  const [notices, setNotices] = useState(
-    Array.from({ length: 50 }, (_, index) => ({
-      id: 50 - index,
-      author: index % 2 === 0 ? '박준' : '이주',
-      title: `${50 - index} 번째 공지사항 제목입니다`,
-      date: '2024-12-21 / 05:23AM',
-      status: index % 2 === 0 ? '공지' : '정상',
-    }))
-  );
+  const dispatch = useDispatch();
 
-  const [selectedNotices, setSelectedNotices] = useState([]);
+  // Redux 상태
+  const {
+    items: notices,
+    status,
+    error,
+  } = useSelector((state) => state.notices);
+
+  // 상태 관리
   const [filters, setFilters] = useState({
     search: '',
     sort: 'recent',
     status: 'all',
-    sortDirection: 'desc',
   });
-
+  const [selectedNotices, setSelectedNotices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchNotices());
+    }
+  }, [status, dispatch]);
 
   const handleAddNotice = () => {
     navigate('/dashboard/notice/add');
@@ -50,54 +57,55 @@ const Notice = () => {
       return;
     }
     if (window.confirm('선택된 공지를 삭제하시겠습니까?')) {
-      setNotices((prev) =>
-        prev.filter((notice) => !selectedNotices.includes(notice.id))
-      );
-      setSelectedNotices([]);
-      alert('삭제 완료');
+      alert('선택된 공지가 삭제되었습니다.');
     }
   };
 
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (noticeId) => {
     setSelectedNotices((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(noticeId)
+        ? prev.filter((id) => id !== noticeId)
+        : [...prev, noticeId]
     );
   };
-
-  const filteredNotices = notices.filter(
-    (notice) =>
-      (filters.status === 'all' || notice.status === filters.status) &&
-      notice.title.includes(filters.search)
-  );
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
+
   const handleSortChange = (sortKey) => {
     setFilters((prev) => ({
       ...prev,
       sort: sortKey,
-      sortDirection:
-        prev.sort === sortKey && prev.sortDirection === 'asc' ? 'desc' : 'asc',
     }));
   };
 
-  const sortedNotices = [...filteredNotices].sort((a, b) => {
-    const compareKey = filters.sort === 'recent' ? 'date' : 'id';
-    const isAscending = filters.sortDirection === 'asc';
+  const filteredNotices = notices.filter(
+    (notice) =>
+      (filters.status === 'all' || notice.state === filters.status) &&
+      notice.title.toLowerCase().includes(filters.search.toLowerCase())
+  );
 
-    const comparison =
-      compareKey === 'date'
-        ? new Date(a[compareKey]) - new Date(b[compareKey])
-        : a[compareKey] - b[compareKey];
-
-    return isAscending ? comparison : -comparison;
-  });
-
-  const paginatedNotices = sortedNotices.slice(
+  const paginatedNotices = filteredNotices.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  if (status === 'loading') {
+    return (
+      <Typography variant="h6" align="center">
+        공지사항을 불러오는 중입니다...
+      </Typography>
+    );
+  }
+
+  if (status === 'failed') {
+    return (
+      <Typography variant="h6" align="center" color="error">
+        에러 발생: {error}
+      </Typography>
+    );
+  }
 
   return (
     <Box p={3} width="100%" height="100%" sx={{ overflowY: 'auto' }}>
@@ -149,8 +157,9 @@ const Notice = () => {
             size="small"
           >
             <MenuItem value="all">전체</MenuItem>
-            <MenuItem value="공지">공지</MenuItem>
-            <MenuItem value="정상">정상</MenuItem>
+            <MenuItem value="active">활성</MenuItem>
+            <MenuItem value="archived">보관</MenuItem>
+            <MenuItem value="deleted">삭제</MenuItem>
           </Select>
         </Box>
         <Box display="flex" alignItems="center">
@@ -183,18 +192,24 @@ const Notice = () => {
           </TableHead>
           <TableBody>
             {paginatedNotices.map((notice) => (
-              <TableRow key={notice.id}>
+              <TableRow
+                key={notice.notice_number}
+                onClick={() =>
+                  navigate(`/dashboard/notice/${notice.notice_number}`)
+                }
+                style={{ cursor: 'pointer' }}
+              >
                 <TableCell>
                   <Checkbox
-                    checked={selectedNotices.includes(notice.id)}
-                    onChange={() => handleCheckboxChange(notice.id)}
+                    checked={selectedNotices.includes(notice.notice_number)}
+                    onChange={() => handleCheckboxChange(notice.notice_number)}
                   />
                 </TableCell>
-                <TableCell>{notice.id}</TableCell>
-                <TableCell>{notice.author}</TableCell>
+                <TableCell>{notice.notice_number}</TableCell>
+                <TableCell>{notice.admin_number}</TableCell>
                 <TableCell>{notice.title}</TableCell>
-                <TableCell>{notice.date}</TableCell>
-                <TableCell>{notice.status}</TableCell>
+                <TableCell>{notice.created_at}</TableCell>
+                <TableCell>{notice.state}</TableCell>
               </TableRow>
             ))}
           </TableBody>
