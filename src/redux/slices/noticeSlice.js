@@ -24,9 +24,9 @@ export const fetchNoticeDetail = createAsyncThunk(
 // 공지 추가 Thunk
 export const addNotice = createAsyncThunk(
   'notices/addNotice',
-  async (noticeData, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/notices`, noticeData, {
+      const response = await axios.post(`${BASE_URL}/notices`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

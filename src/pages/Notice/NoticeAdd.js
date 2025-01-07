@@ -20,7 +20,7 @@ const NoticeAdd = () => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    photos: [], // 다중 파일 저장
+    photos: null, // 다중 파일 저장
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false); // 요청 중 상태
@@ -52,15 +52,15 @@ const NoticeAdd = () => {
     data.append('admin_id', adminId); // 관리자 ID 추가
     data.append('admin_number', adminNumber); // 관리자 Number 추가
     data.append('imageType', 'notice'); // 이미지 타입 추가
-
+    console.log(data);
     // 'noticePicture' 필드로 파일 추가
-    photos.forEach((photo) => data.append('noticePicture', photo));
+    photos.forEach((file) => data.append('noticePicture', file));
 
     setIsSubmitting(true);
-
+    console.log(data);
     dispatch(addNotice(data)).then((result) => {
       setIsSubmitting(false);
-
+      console.log(data);
       if (addNotice.fulfilled.match(result)) {
         alert('공지 추가 완료');
         navigate('/dashboard/notice');
