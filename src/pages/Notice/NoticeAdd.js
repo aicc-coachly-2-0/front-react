@@ -51,7 +51,7 @@ const NoticeAdd = () => {
     data.append('content', content);
     data.append('admin_id', adminId); // 관리자 ID 추가
     data.append('admin_number', adminNumber); // 관리자 Number 추가
-    data.append('imageType', 'post'); // 이미지 타입 추가
+    data.append('imageType', 'notice'); // 이미지 타입 추가
 
     // 'noticePicture' 필드로 파일 추가
     photos.forEach((photo) => data.append('noticePicture', photo));
