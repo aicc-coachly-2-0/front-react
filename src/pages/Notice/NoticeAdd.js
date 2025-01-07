@@ -16,7 +16,7 @@ const NoticeAdd = () => {
 
   // Redux 또는 Context에서 관리자 ID 가져오기
   const adminId = useSelector((state) => state.auth.user?.admin_id);
-
+  const adminNumber = useSelector((state) => state.auth.user?.admin_number);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -50,6 +50,8 @@ const NoticeAdd = () => {
     data.append('title', title);
     data.append('content', content);
     data.append('admin_id', adminId); // 관리자 ID 추가
+    data.append('admin_number', adminNumber); // 관리자 Number 추가
+    data.append('imageType', 'post'); // 이미지 타입 추가
 
     // 'noticePicture' 필드로 파일 추가
     photos.forEach((photo) => data.append('noticePicture', photo));

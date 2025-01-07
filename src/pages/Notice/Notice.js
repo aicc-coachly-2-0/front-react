@@ -26,7 +26,7 @@ const Notice = () => {
 
   // Redux 상태
   const {
-    items: notices,
+    items: notices = [],
     status,
     error,
   } = useSelector((state) => state.notices);
@@ -80,12 +80,14 @@ const Notice = () => {
     }));
   };
 
+  // 필터링된 공지 목록
   const filteredNotices = notices.filter(
     (notice) =>
       (filters.status === 'all' || notice.state === filters.status) &&
-      notice.title.toLowerCase().includes(filters.search.toLowerCase())
+      notice.title?.toLowerCase().includes(filters.search.toLowerCase())
   );
 
+  // 페이지네이션 처리
   const paginatedNotices = filteredNotices.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
