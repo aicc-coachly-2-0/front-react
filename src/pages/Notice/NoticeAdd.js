@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import {
   Box,
   Typography,
-  TextField,
   Button,
-  IconButton,
   Stack,
   CircularProgress,
 } from '@mui/material';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addNotice } from '../../redux/slices/noticeSlice';
 
 const NoticeAdd = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Redux 또는 Context에서 관리자 ID 가져오기
+  const adminId = useSelector((state) => state.auth.user?.admin_id);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -49,9 +49,10 @@ const NoticeAdd = () => {
     const data = new FormData();
     data.append('title', title);
     data.append('content', content);
+    data.append('admin_id', adminId); // 관리자 ID 추가
 
-    // 선택적으로 사진 추가
-    photos.forEach((photo) => data.append('photos', photo));
+    // 'noticePicture' 필드로 파일 추가
+    photos.forEach((photo) => data.append('noticePicture', photo));
 
     setIsSubmitting(true);
 
@@ -92,8 +93,8 @@ const NoticeAdd = () => {
         variant="h4"
         mb={4}
         sx={{
-          textAlign: 'left', // 텍스트를 왼쪽 정렬
-          width: '100%', // 부모 요소 너비에 맞춤
+          textAlign: 'left',
+          width: '100%',
         }}
       >
         공지 추가
@@ -113,70 +114,54 @@ const NoticeAdd = () => {
       >
         {/* 입력 필드 */}
         <Stack spacing={6}>
-          <TextField
-            label="제목"
-            fullWidth
-            size="large"
+          <input
+            type="text"
+            placeholder="제목을 입력하세요"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            InputLabelProps={{ shrink: true }}
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+            }}
           />
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={6}>
-            <TextField
-              label="관리자(아이디)"
-              fullWidth
-              size="large"
-              InputProps={{ readOnly: true }}
-              value="admin123" // 관리자 ID는 하드코딩된 값으로 설정
-              InputLabelProps={{ shrink: true }}
-            />
-
-            <TextField
-              label="게시일"
-              fullWidth
-              size="large"
-              InputProps={{ readOnly: true }}
-              value={new Date().toLocaleDateString()} // 현재 날짜
-              InputLabelProps={{ shrink: true }}
-            />
-          </Stack>
-
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={6}>
-            <TextField
-              label="첨부사진"
-              fullWidth
-              size="large"
-              InputProps={{
-                endAdornment: (
-                  <IconButton component="label">
-                    <PhotoCamera />
-                    <input
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      multiple
-                      onChange={handleFileChange}
-                    />
-                  </IconButton>
-                ),
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Stack>
-
-          <TextField
-            label="내용"
-            multiline
-            rows={8}
-            fullWidth
-            size="large"
+          <textarea
+            placeholder="내용을 입력하세요"
             name="content"
             value={formData.content}
             onChange={handleInputChange}
-            InputLabelProps={{ shrink: true }}
+            rows="8"
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+            }}
           />
+
+          <Box>
+            <Typography variant="subtitle1" mb={1}>
+              첨부사진:
+            </Typography>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+              style={{
+                width: '100%',
+                padding: '12px',
+                fontSize: '16px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+              }}
+            />
+          </Box>
         </Stack>
 
         {/* 하단 버튼 */}
