@@ -1,204 +1,114 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  Pagination,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Box, Typography, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Pagination, Select, MenuItem, Button 
+} from '@mui/material';
+import { fetchQnas } from '../../../redux/slice/qnaSlice';
 
 const QNAList = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { items: qnas, status, error } = useSelector((state) => state.qnas);
+
+  // 선택된 질문 상태
+  const [selectedQnas, setSelectedQnas] = useState([]);
   const [filters, setFilters] = useState({
-    sort: 'recent',
-    category: 'all',
-    status: 'all',
     search: '',
+    sort: 'recent',
+    status: 'all',
   });
-
-  const [selectedRows, setSelectedRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-
   const itemsPerPage = 10;
-  const data = Array.from({ length: 50 }, (_, index) => ({
-    id: 50 - index,
-    NO: 50 - index,
-    '회원(아이디)': `박준(123***qw)`,
-    카테고리: index % 3 === 0 ? '결제' : index % 3 === 1 ? '신고' : '미션',
-    제목: `N 번째 문의사항 제목입니다`,
-    작성일: '2023-04-26',
-    답변일: '2024-12-21 / 05:23AM',
-    답변상태: index % 2 === 0 ? '완료' : '대기',
-  }));
 
-  const handleSortChange = (e) => {
-    setFilters((prev) => ({ ...prev, sort: e.target.value }));
-  };
-
-  const handleCategoryChange = (e) => {
-    setFilters((prev) => ({ ...prev, category: e.target.value }));
-  };
-
-  const handleStatusChange = (e) => {
-    setFilters((prev) => ({ ...prev, status: e.target.value }));
-  };
-
-  const handleSearchChange = (e) => {
-    setFilters((prev) => ({ ...prev, search: e.target.value }));
-  };
-
-  const handleRowClick = (id) => {
-    navigate(`/dashboard/inquiry/qna/${id}`);
-  };
-
-  const handleRowSelect = (id) => {
-    setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((row) => row !== id) : [...prev, id]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectedRows.length === data.length) {
-      setSelectedRows([]);
-    } else {
-      setSelectedRows(data.map((row) => row.id));
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchQnas());
     }
-  };
+  }, [dispatch, status]);
 
-  const filteredData = data.filter((row) => {
-    return (
-      (filters.category === 'all' || row.카테고리 === filters.category) &&
-      (filters.status === 'all' || row.답변상태 === filters.status) &&
-      row.제목.includes(filters.search)
-    );
+  if (status === 'loading') return <p>로딩 중...</p>;
+  if (status === 'failed') return <p>에러 발생: {error}</p>;
+
+  // 필터링 및 정렬
+  const filteredQnas = qnas.filter(
+    (qna) =>
+      (filters.status === 'all' || qna.status === filters.status) &&
+      qna.title.toLowerCase().includes(filters.search.toLowerCase())
+  );
+
+  const sortedQnas = [...filteredQnas].sort((a, b) => {
+    return filters.sort === 'recent'
+      ? new Date(b.created_at) - new Date(a.created_at)
+      : new Date(a.created_at) - new Date(b.created_at);
   });
 
-  const paginatedData = filteredData.slice(
+  const paginatedQnas = sortedQnas.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // 이벤트 핸들러
+  const handleSearchChange = (e) => setFilters((prev) => ({ ...prev, search: e.target.value }));
+  const handlePageChange = (event, value) => setCurrentPage(value);
+
   return (
-    <Box p={3} width="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
-      {/* 상단 제목 및 버튼 */}
-      <Box
-        mb={3}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Typography variant="h5" fontWeight="bold">
-          문의 사항 관리 (Q&A)
-        </Typography>
+    <Box p={3} width="100%" sx={{ overflowY: 'auto' }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h5" fontWeight="bold">Q&A 관리</Typography>
+        <Button variant="contained" onClick={() => navigate('/dashboard/inquiry/qna/add')}>
+          질문 추가
+        </Button>
       </Box>
 
-      {/* 검색 및 필터 */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Box display="flex" gap={2}>
-          <Select value={filters.sort} onChange={handleSortChange} size="small">
-            <MenuItem value="recent">최근 작성순</MenuItem>
-            <MenuItem value="oldest">오래된 작성순</MenuItem>
-          </Select>
           <Select
-            value={filters.category}
-            onChange={handleCategoryChange}
+            value={filters.sort}
+            onChange={(e) => setFilters((prev) => ({ ...prev, sort: e.target.value }))}
             size="small"
           >
-            <MenuItem value="all">전체</MenuItem>
-            <MenuItem value="결제">결제</MenuItem>
-            <MenuItem value="신고">신고</MenuItem>
-            <MenuItem value="미션">미션</MenuItem>
-          </Select>
-          <Select
-            value={filters.status}
-            onChange={handleStatusChange}
-            size="small"
-          >
-            <MenuItem value="all">전체</MenuItem>
-            <MenuItem value="완료">완료</MenuItem>
-            <MenuItem value="대기">대기</MenuItem>
+            <MenuItem value="recent">최신순</MenuItem>
+            <MenuItem value="oldest">오래된 순</MenuItem>
           </Select>
         </Box>
         <TextField
-          placeholder="여기에 검색어를 입력하세요"
-          size="small"
+          placeholder="검색"
           value={filters.search}
           onChange={handleSearchChange}
+          size="small"
         />
       </Box>
 
-      {/* 테이블 */}
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center">
-                <Checkbox
-                  checked={selectedRows.length === data.length}
-                  indeterminate={
-                    selectedRows.length > 0 && selectedRows.length < data.length
-                  }
-                  onChange={handleSelectAll}
-                />
-              </TableCell>
               <TableCell align="center">NO</TableCell>
-              <TableCell align="center">회원(아이디)</TableCell>
-              <TableCell align="center">카테고리</TableCell>
               <TableCell align="center">제목</TableCell>
               <TableCell align="center">작성일</TableCell>
-              <TableCell align="center">답변일</TableCell>
-              <TableCell align="center">답변상태</TableCell>
+              <TableCell align="center">상태</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedData.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{ cursor: 'pointer' }}
-                onClick={() => handleRowClick(row.id)}
-              >
-                <TableCell align="center">
-                  <Checkbox
-                    checked={selectedRows.includes(row.id)}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={() => handleRowSelect(row.id)}
-                  />
-                </TableCell>
-                <TableCell align="center">{row.NO}</TableCell>
-                <TableCell align="center">{row['회원(아이디)']}</TableCell>
-                <TableCell align="center">{row.카테고리}</TableCell>
-                <TableCell align="center">{row.제목}</TableCell>
-                <TableCell align="center">{row.작성일}</TableCell>
-                <TableCell align="center">{row.답변일}</TableCell>
-                <TableCell align="center">{row.답변상태}</TableCell>
+            {paginatedQnas.map((qna) => (
+              <TableRow key={qna.id} onClick={() => navigate(`/dashboard/inquiry/qna/${qna.question_number}`)}>
+                <TableCell align="center">{qna.question_number}</TableCell>
+                <TableCell align="center">{qna.title}</TableCell>
+                <TableCell align="center">{new Date(qna.created_at).toLocaleDateString()}</TableCell>
+                <TableCell align="center">{qna.state}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      {/* 페이지네이션 */}
       <Box mt={2} display="flex" justifyContent="center">
         <Pagination
-          count={Math.ceil(filteredData.length / itemsPerPage)}
+          count={Math.ceil(filteredQnas.length / itemsPerPage)}
           page={currentPage}
-          onChange={(e, value) => setCurrentPage(value)}
-          color="primary"
+          onChange={handlePageChange}
         />
       </Box>
     </Box>
