@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import SignIn from './pages/signIn/SignIn';
 
 // app이라고 생각하자 바꿔도 된다. app으로
 import App from './App';
-
+import store from './redux/store'; // Redux 스토어를 import
 // 대시보드
 import Dashboard from './pages/dashboard/Dashboard';
 // 유저
@@ -90,6 +91,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

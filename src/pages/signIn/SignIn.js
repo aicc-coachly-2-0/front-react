@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { CssBaseline, Typography, Stack, Card as MuiCard } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SignInForm from './SignInForm'; // 경로 유지
+import SignInForm from './SignInForm';
 import { useNavigate } from 'react-router-dom';
-import CustomIcons from '../../internals/dashboardpage/CustomIcons';
+import { useSelector } from 'react-redux';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -16,28 +16,16 @@ const Card = styled(MuiCard)(({ theme }) => ({
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => !!state.auth.user);
 
-  // 더미 유저 데이터
-  const DUMMY_USER = {
-    email: 'test@example.com',
-    password: 'qwer1234',
-  };
-
-  // 로그인 상태 확인
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
     if (isLoggedIn) {
       navigate('/dashboard');
     }
-  }, [navigate]);
+  }, [isLoggedIn, navigate]);
 
-  const handleLogin = (email, password) => {
-    if (email === DUMMY_USER.email && password === DUMMY_USER.password) {
-      localStorage.setItem('isLoggedIn', 'true'); // 로그인 상태 저장
-      navigate('/dashboard'); // 대시보드로 이동
-    } else {
-      alert('Invalid email or password'); // 실패 메시지
-    }
+  const handleLoginSuccess = () => {
+    navigate('/dashboard');
   };
 
   return (
@@ -49,11 +37,11 @@ export default function SignIn() {
         sx={{ height: '100vh' }}
       >
         <Card variant="outlined">
-          {/* <SitemarkIcon /> */} {/* 아이콘은 주석 처리 유지 */}
           <Typography variant="h4" sx={{ textAlign: 'center' }}>
             관리자 로그인
           </Typography>
-          <SignInForm onLogin={handleLogin} />
+          {/* 수정: prop 이름 통일 */}
+          <SignInForm onLogin={handleLoginSuccess} />
         </Card>
       </Stack>
     </>

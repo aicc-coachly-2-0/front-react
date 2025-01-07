@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { rows, columns } from '../../internals/data/gridData';
+import gridData from '../../internals/data/gridData'; // gridData import
 
 export default function CustomizedDataGrid() {
+  const { rows, columns } = gridData; // gridData에서 rows와 columns 분리
+
   return (
     <DataGrid
       autoHeight

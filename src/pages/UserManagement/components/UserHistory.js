@@ -68,7 +68,7 @@ export const UserHistory = ({ userNumber }) => {
     if (userNumber) {
       fetchData();
     }
-  }, [fetchData]);
+  }, [fetchData, userNumber]);
 
   const handleButtonClick = (historyType) => {
     setActiveHistory(historyType);

@@ -47,70 +47,68 @@ function renderSparklineCell(params) {
   );
 }
 
-// Columns 정의
-export const columns = [
-  { field: 'pageTitle', headerName: 'Page Title', flex: 1.5, minWidth: 200 },
-  {
-    field: 'status',
-    headerName: 'Status',
-    flex: 0.5,
-    renderCell: (params) => (
-      <Chip
-        label={params.value}
-        color={params.value === 'Online' ? 'success' : 'default'}
-        size="small"
-      />
-    ),
-  },
-  {
-    field: 'users',
-    headerName: 'Users',
-    flex: 1,
-    minWidth: 80,
-    align: 'right',
-  },
-  {
-    field: 'eventCount',
-    headerName: 'Event Count',
-    flex: 1,
-    minWidth: 100,
-    align: 'right',
-  },
-  {
-    field: 'viewsPerUser',
-    headerName: 'Views per User',
-    flex: 1,
-    minWidth: 120,
-    align: 'right',
-  },
-  {
-    field: 'averageTime',
-    headerName: 'Average Time',
-    flex: 1,
-    minWidth: 100,
-    align: 'right',
-  },
-  {
-    field: 'conversions',
-    headerName: 'Daily Conversions',
-    flex: 1,
-    renderCell: renderSparklineCell,
-  },
-];
+const gridData = {
+  columns: [
+    { field: 'pageTitle', headerName: 'Page Title', flex: 1.5, minWidth: 200 },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 0.5,
+      renderCell: (params) => (
+        <Chip
+          label={params.value}
+          color={params.value === 'Online' ? 'success' : 'default'}
+          size="small"
+        />
+      ),
+    },
+    {
+      field: 'users',
+      headerName: 'Users',
+      flex: 1,
+      minWidth: 80,
+      align: 'right',
+    },
+    {
+      field: 'eventCount',
+      headerName: 'Event Count',
+      flex: 1,
+      minWidth: 100,
+      align: 'right',
+    },
+    {
+      field: 'viewsPerUser',
+      headerName: 'Views per User',
+      flex: 1,
+      minWidth: 120,
+      align: 'right',
+    },
+    {
+      field: 'averageTime',
+      headerName: 'Average Time',
+      flex: 1,
+      minWidth: 100,
+      align: 'right',
+    },
+    {
+      field: 'conversions',
+      headerName: 'Daily Conversions',
+      flex: 1,
+      renderCell: renderSparklineCell,
+    },
+  ],
+  rows: [
+    {
+      id: 1,
+      pageTitle: 'Homepage Overview',
+      status: 'Online',
+      users: 212423,
+      eventCount: 8345,
+      viewsPerUser: 18.5,
+      averageTime: '2m 15s',
+      conversions: Array.from({ length: 30 }, (_, i) => 1000 + i * 100),
+    },
+  ],
+};
 
-// Rows 데이터 정의
-export const rows = [
-  {
-    id: 1,
-    pageTitle: 'Homepage Overview',
-    status: 'Online',
-    users: 212423,
-    eventCount: 8345,
-    viewsPerUser: 18.5,
-    averageTime: '2m 15s',
-    conversions: Array.from({ length: 30 }, (_, i) => 1000 + i * 100),
-  },
-  // 추가 행 데이터를 여기에 정의...
-];
-
-export default { columns, rows };
+export default gridData;

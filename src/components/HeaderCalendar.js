@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import TextField from '@mui/material/TextField';
+// import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import dayjs from 'dayjs';
@@ -36,14 +36,13 @@ export default function HeaderCalendar() {
         onClose={() => setOpen(false)}
         value={selectedDate}
         onChange={(newValue) => setSelectedDate(newValue)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            sx={{
-              display: 'none', // 헤더에선 숨김
-            }}
-          />
-        )}
+        slotProps={{
+          textField: {
+            sx: {
+              display: 'none', // 헤더에서 숨김
+            },
+          },
+        }}
         // DatePicker 스타일링
         PopperProps={{
           sx: {

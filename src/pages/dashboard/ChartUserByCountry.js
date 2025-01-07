@@ -130,7 +130,8 @@ export default function ChartUserByCountry() {
             direction="row"
             sx={{ alignItems: 'center', gap: 2, pb: 2 }}
           >
-            {country.flag}
+            {React.createElement(country.flag)}{' '}
+            {/* 함수 호출하여 JSX로 렌더링 */}
             <Stack sx={{ gap: 1, flexGrow: 1 }}>
               <Stack
                 direction="row"

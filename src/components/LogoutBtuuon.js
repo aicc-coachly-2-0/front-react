@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/slice/authSlice'; // 경로 확인 필요
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderColor: 'transparent',
@@ -14,11 +16,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 export default function LogoutButton() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
-    navigate('/'); // 로그인 페이지로 리다이렉트
+    dispatch(logout()); // Redux 상태 초기화
+    localStorage.removeItem('token'); // JWT 토큰 제거
+    navigate('/'); // 로그인 페이지로 이동
   };
 
   return (

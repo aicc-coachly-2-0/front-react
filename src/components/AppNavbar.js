@@ -28,10 +28,8 @@ const Toolbar = styled(MuiToolbar)({
 });
 
 export default function AppNavbar() {
-  const [open, setOpen] = React.useState(false);
-
   const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+    console.log(newOpen); // 여기에서 필요하면 로직 추가
   };
 
   return (

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import ChartUserByCountry from './ChartUserByCountry'; // 경로 유지
 // import CustomizedTreeView from './CustomizedTreeView';
 import CustomizedDataGrid from './CustomizedDataGrid'; // 경로 유지
-import HighlightedCard from './HighlightedCard'; // 경로 유지
+// import HighlightedCard from './HighlightedCard'; // 경로 유지
 import PageViewsBarChart from './PageViewsBarChart'; // 경로 유지
 import SessionsChart from './SessionsChart'; // 경로 유지
 import StatCard from './StatCard'; // 경로 유지
@@ -48,7 +48,6 @@ const data = [
 ];
 
 export default function Dashboard() {
-  console.log('MainGrid is rendering...');
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       {/* cards */}
