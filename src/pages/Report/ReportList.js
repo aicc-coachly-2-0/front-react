@@ -1,44 +1,36 @@
-import React, { useState, useMemo } from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  Select,
-  MenuItem,
-  Pagination,
-} from '@mui/material';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Box, Typography, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Select, MenuItem, Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchReport } from '../../redux/slices/reportSlice'; // fetchReport 액션 추가
 
-const ReportList = ({ title, columns, data, detailPath }) => {
+const ReportList = ({ title, columns, domain, detailPath }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // dispatch 사용
   const itemsPerPage = 10;
 
+  // 리포트 상태 가져오기
+  const reports = useSelector((state) => state.reports.data || []); // reports가 배열이 아닌 경우 빈 배열로 초기화
+  const loading = useSelector((state) => state.reports.loading); // 로딩 상태
+
   const [filters, setFilters] = useState({
-    type: 'all',
     order: 'recent',
     search: '',
   });
 
   const [currentPage, setCurrentPage] = useState(1);
 
+  useEffect(() => {
+    if (domain) {
+      dispatch(fetchReport({ domain })); // domain 값이 존재할 때만 호출
+    }
+  }, [domain, dispatch]);
+
   // 필터링 및 정렬된 데이터 계산
   const filteredData = useMemo(() => {
-    let filtered = [...data];
+    let filtered = [...reports];
 
-    // 필터 적용
-    if (filters.type !== 'all') {
-      filtered = filtered.filter((item) => item.type === filters.type);
-    }
-
-    // 검색 적용
+    // 검색어 필터 적용
     if (filters.search) {
       filtered = filtered.filter((item) =>
         Object.values(item).some((value) =>
@@ -47,16 +39,16 @@ const ReportList = ({ title, columns, data, detailPath }) => {
       );
     }
 
-    // 정렬 적용
+    // 신고 날짜 기준 정렬 적용
     filtered.sort((a, b) => {
       if (filters.order === 'recent') {
-        return new Date(b.date) - new Date(a.date);
+        return new Date(b.report_at) - new Date(a.report_at);
       }
-      return new Date(a.date) - new Date(b.date);
+      return new Date(a.report_at) - new Date(b.report_at);
     });
 
     return filtered;
-  }, [data, filters]);
+  }, [reports, filters]);
 
   // 페이지네이션 데이터
   const paginatedData = filteredData.slice(
@@ -72,38 +64,20 @@ const ReportList = ({ title, columns, data, detailPath }) => {
     setCurrentPage(value);
   };
 
+  if (loading) {
+    return <Typography>Loading...</Typography>; // 로딩 중이면 메시지 표시
+  }
+
   return (
     <Box p={3} width="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
-      <Box
-        mb={3}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h5" fontWeight="bold">
           {title}
         </Typography>
       </Box>
 
-      <Box
-        mb={3}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
         <Box display="flex" gap={2}>
-          <Select
-            value={filters.type}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, type: e.target.value }))
-            }
-            size="small"
-          >
-            <MenuItem value="all">전체</MenuItem>
-            <MenuItem value="warning">경고</MenuItem>
-            <MenuItem value="report">신고</MenuItem>
-            <MenuItem value="process">처리</MenuItem>
-          </Select>
           <Select
             value={filters.order}
             onChange={(e) =>
@@ -115,6 +89,7 @@ const ReportList = ({ title, columns, data, detailPath }) => {
             <MenuItem value="oldest">오래된 신고순</MenuItem>
           </Select>
         </Box>
+
         <Box display="flex" alignItems="center" gap={1}>
           <TextField
             placeholder="여기에 검색어를 입력하세요"
@@ -143,22 +118,30 @@ const ReportList = ({ title, columns, data, detailPath }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedData.map((row, rowIndex) => (
-              <TableRow
-                key={rowIndex}
-                onClick={() => handleRowClick(row.NO)}
-                sx={{ cursor: 'pointer' }}
-              >
-                <TableCell align="center">
-                  <Checkbox />
+            {paginatedData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length + 1} align="center">
+                  신고내역이 없습니다
                 </TableCell>
-                {columns.map((column, colIndex) => (
-                  <TableCell key={colIndex} align="center">
-                    {row[column] || '-'}
-                  </TableCell>
-                ))}
               </TableRow>
-            ))}
+            ) : (
+              paginatedData.map((row, rowIndex) => (
+                <TableRow
+                  key={rowIndex}
+                  onClick={() => handleRowClick(row.feed_report_number)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <TableCell align="center">
+                    <Checkbox />
+                  </TableCell>
+                  {columns.map((column, colIndex) => (
+                    <TableCell key={colIndex} align="center">
+                      {column === '처리일' ? row.report_at || 'null' : row[column] || '-'}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -175,12 +158,12 @@ const ReportList = ({ title, columns, data, detailPath }) => {
   );
 };
 
-export default ReportList;
-
-// 리스트 페이지별 내보내기 (정확한 경로 확인 필요)
+// 리스트 페이지별 내보내기 (각각의 리포트 리스트 컴포넌트)
 export { ReportCommentList } from './Reportlist/ReportCommentList';
 export { ReportUserList } from './Reportlist/ReportUserList';
 export { ReportPostList } from './Reportlist/ReportPostList';
 export { ReportMissionAuthList } from './Reportlist/ReportMissionAuthList';
 export { ReportMissionRoomList } from './Reportlist/ReportMissionRoomList';
 export { ReportFeedList } from './Reportlist/ReportFeedList';
+
+export default ReportList;

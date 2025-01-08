@@ -3,7 +3,6 @@ import ReportListPage from '../ReportList';
 export const ReportUserList = () => {
   const columns = [
     'NO',
-    '신고 분류',
     '신고자(아이디)',
     '신고대상(아이디)',
     '신고일',
@@ -12,7 +11,6 @@ export const ReportUserList = () => {
   ];
   const data = Array.from({ length: 10 }, (_, index) => ({
     NO: 20 - index,
-    '신고 분류': index % 3 === 0 ? '경고' : index % 3 === 1 ? '신고' : '처리',
     '신고자(아이디)': `유저${index}(123***qw)`,
     '신고대상(아이디)': `유저대상${index}(456***qw)`,
     신고일: '2024-12-21 / 05:23AM',
@@ -26,6 +24,7 @@ export const ReportUserList = () => {
       columns={columns}
       data={data}
       detailPath="/dashboard/reports/users"
+      domain="user" // domain 값을 추가로 전달
     />
   );
 };

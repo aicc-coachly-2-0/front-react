@@ -29,8 +29,8 @@ const mainListItems = [
     subItems: [
       { text: '댓글 신고', path: '/dashboard/reports/comments' },
       { text: '게시글 신고', path: '/dashboard/reports/posts' },
-      { text: '미션 인증 신고', path: '/dashboard/reports/mission-auth' },
-      { text: '미션방 신고', path: '/dashboard/reports/mission-room' },
+      { text: '미션 인증 신고', path: '/dashboard/reports/mission_validations' },
+      { text: '미션방 신고', path: '/dashboard/reports/missions' },
       { text: '피드 신고', path: '/dashboard/reports/feeds' },
       { text: '유저 신고', path: '/dashboard/reports/users' },
     ],
