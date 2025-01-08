@@ -182,7 +182,7 @@ useEffect(() => {
         </Stack>
       </Box>
 
-      {/* 답변 영역 */}
+            {/* 답변 영역 */}
       <Box
         sx={{
           p: 4,
@@ -196,51 +196,64 @@ useEffect(() => {
         <Typography variant="h6" fontWeight="bold" mb={3}>
           답변 정보
         </Typography>
-        {noAnswers ? (
-          <Typography variant="body1" color="textSecondary">
-            이 질문에는 아직 답변이 없습니다.
-          </Typography>
-        ) : (
-          <Stack spacing={3}>
-            <TextField
-              label="제목"
-              fullWidth
-              size="small"
-              value={localAnswerData.title}
-              onChange={(e) => setLocalAnswerData({ ...localAnswerData, title: e.target.value })}
-            />
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  label="관리자(아이디)"
-                  fullWidth
-                  size="small"
-                  value={localAnswerData.admin}
-                  InputProps={{ readOnly: true }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  label="답변일"
-                  fullWidth
-                  size="small"
-                  value={localAnswerData.answerDate}
-                  InputProps={{ readOnly: true }}
-                />
-              </Grid>
+        <Stack spacing={3}>
+          <TextField
+            label="제목"
+            fullWidth
+            size="small"
+            value={
+              localAnswerData && localAnswerData.title
+                ? localAnswerData.title
+                : '이 질문에는 아직 답변이 없습니다.'
+            }
+            onChange={(e) =>
+              setLocalAnswerData({
+                ...localAnswerData,
+                title: e.target.value,
+              })
+            }
+          />
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="관리자(아이디)"
+                fullWidth
+                size="small"
+                value={localAnswerData?.admin || ''}
+                InputProps={{ readOnly: true }}
+              />
             </Grid>
-            <TextField
-              label="내용"
-              multiline
-              rows={5}
-              fullWidth
-              size="small"
-              value={localAnswerData.content}
-              onChange={(e) => setLocalAnswerData({ ...localAnswerData, content: e.target.value })}
-            />
-          </Stack>
-        )}
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="답변일"
+                fullWidth
+                size="small"
+                value={localAnswerData?.answerDate || ''}
+                InputProps={{ readOnly: true }}
+              />
+            </Grid>
+          </Grid>
+          <TextField
+            label="내용"
+            multiline
+            rows={5}
+            fullWidth
+            size="small"
+            value={
+              localAnswerData && localAnswerData.content
+                ? localAnswerData.content
+                : '이 질문에는 아직 답변이 없습니다.'
+            }
+            onChange={(e) =>
+              setLocalAnswerData({
+                ...localAnswerData,
+                content: e.target.value,
+              })
+            }
+          />
+        </Stack>
       </Box>
+
 
       {/* 하단 버튼 */}
       <Box mt={4} display="flex" justifyContent="space-between">
