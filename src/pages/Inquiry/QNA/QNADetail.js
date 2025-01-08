@@ -1,105 +1,98 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, TextField, Grid, Stack, Button } from '@mui/material';
+import { Box, Typography, TextField, Button, Stack, Grid } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchQuestionDetail, fetchAnswersByQuestion, updateAnswer, createAnswer } from '../../../redux/slices/qnaSlice';
-import { selectQuestionDetail, selectQnaStatus, selectQnaError, selectAnswers } from '../../../redux/slices/qnaSlice';
+import { fetchQnas, fetchQuestionDetail, fetchAnswersByQuestion, updateAnswer, createAnswer } from '../../../redux/slices/qnaSlice';
+import { selectQuestionDetail, selectAnswers, selectQnaStatus, selectQnaError } from '../../../redux/slices/qnaSlice';
 
 const QNADetail = () => {
   const navigate = useNavigate();
-  const { question_number } = useParams(); // URL에서 질문 번호 가져오기
+  const { question_number } = useParams();
   const dispatch = useDispatch();
 
   // Redux 상태
   const questionData = useSelector(selectQuestionDetail);
   const answers = useSelector(selectAnswers);
+  console.log('Answers from Redux:', answers);  // Redux에서 가져온 답변 상태 확인
   const status = useSelector(selectQnaStatus);
   const error = useSelector(selectQnaError);
 
-  // 로컬 상태 관리
-  const [localQuestionData, setLocalQuestionData] = useState({
-    title: '',
-    category: '',
-    author: '',
-    date: '',
-    content: '',
-  });
-
-  const [localAnswerData, setLocalAnswerData] = useState({
-    title: '',
-    admin: '',
-    answerDate: '',
-    content: '',
-  });
-
-  const [noAnswers, setNoAnswers] = useState(false); // 답변이 없을 경우 상태 관리
-
-  // 질문 및 답변 데이터 로드
+  // 컴포넌트 마운트 시 QNA 리스트를 불러옵니다.
   useEffect(() => {
+    dispatch(fetchQnas());
+  }, [dispatch]);
+
+  // 로컬에 저장된 관리자 정보 가져오기
+  const [user, setUser] = useState({
+    admin_number: '',
+    admin_id: '',
+  });
+
+  useEffect(() => {
+    const adminData = JSON.parse(localStorage.getItem('user'));
+    if (adminData) {
+      setUser({
+        admin_number: adminData.admin_number,
+        admin_id: adminData.admin_id,
+      });
+    }
+  }, []);
+
+
+  // 답변 내용 상태 관리
+  const [answerContent, setAnswerContent] = useState('');
+
+  // 답변 내용 초기화 및 데이터 업데이트
+  useEffect(() => {
+    // QNA 데이터를 불러오기 위해서 질문과 답변을 다시 가져옵니다.
     if (question_number) {
       dispatch(fetchQuestionDetail(question_number));
       dispatch(fetchAnswersByQuestion(question_number));
     }
   }, [question_number, dispatch]);
 
-  // 답변 데이터 로드 후 처리
+  // 답변이 있으면 해당 내용으로 상태 업데이트
   useEffect(() => {
-    if (answers.length === 0) {
-      setNoAnswers(true);  // 답변이 없을 경우 상태 변경
+    if (answers.length > 0) {
+      setAnswerContent(answers[0].answer_content);  // 첫 번째 답변의 내용으로 설정
     } else {
-      setNoAnswers(false);
+      setAnswerContent('');  // 답변이 없으면 빈 내용으로 설정
     }
-  }, [answers]);
+  }, [answers]);  // answers가 변경될 때마다 실행
 
-// Redux 상태에서 로컬 상태 업데이트
-useEffect(() => {
-  console.log('Question Data:', questionData); // 데이터를 확인합니다.
-  
-  // 질문 데이터가 존재할 경우
-  if (questionData) {
-    setLocalQuestionData({
-      title: questionData.title || '',
-      category: questionData.question_classification_number || '',  // 카테고리
-      author: questionData.user_number || '',  // 작성자 (여기서는 user_number로 가정)
-      date: questionData.created_at || '',  // 작성일
-      content: questionData.question_content || '',  // 질문 내용
-    });
-  }
+  // 답변 데이터 처리
+  const answer = answers[0] || {};  // 답변이 존재하지 않으면 빈 객체를 사용
 
-  // 답변 데이터가 존재할 경우 (answers 배열에서 첫 번째 답변을 가져옴)
-  if (answers && answers.length > 0) {
-    const answer = answers[0];  // 첫 번째 답변
-    setLocalAnswerData({
-      title: answer.answer_content || '',  // 답변 내용 (여기서는 answer_content)
-      admin: answer.admin_number || '',  // 관리자 번호 (admin_number)
-      answerDate: answer.answer_at || '',  // 답변 날짜 (answer_at)
-      content: answer.answer_content || '',  // 답변 내용
-    });
-  } else {
-    setNoAnswers(true);  // 답변이 없으면 noAnswers를 true로 설정
-  }
-}, [questionData, answers]);  // questionData와 answers가 변경될 때마다 상태 업데이트
+  // 답변 내용 변경 핸들러
+  const handleAnswerChange = (e) => {
+    setAnswerContent(e.target.value); // 입력 값만 상태에 반영
+  };
 
   // 저장 핸들러
   const handleSave = () => {
     const payload = {
-      question: localQuestionData,
-      answer: localAnswerData,
+      question_number: question_number,  // 질문 번호
+      admin_number: user.admin_number,    // 관리자 번호
+      answer_content: answerContent || '', // 답변 내용
     };
 
-    if (question_number) {
-      dispatch(updateAnswer({ question_number, payload }))
+    if (answer.answer_number) {
+      // 기존 답변 수정
+      dispatch(updateAnswer({ answer_number: answer.answer_number, payload }))
         .then(() => {
-          alert('Q&A가 수정되었습니다.');
+          alert('답변이 수정되었습니다.');
+          dispatch(fetchQnas()); // FAQ 리스트를 다시 불러옴
           navigate('/dashboard/inquiry/qna');
         })
         .catch((err) => {
           console.error('수정 실패:', err.message);
         });
     } else {
+      // 새로운 답변 생성
       dispatch(createAnswer(payload))
         .then(() => {
-          alert('새 Q&A가 생성되었습니다.');
+          alert('답변이 생성되었습니다.');
+          dispatch(fetchQnas()); // FAQ 리스트를 다시 불러옴
           navigate('/dashboard/inquiry/qna');
         })
         .catch((err) => {
@@ -111,6 +104,9 @@ useEffect(() => {
   // 로딩 및 에러 처리
   if (status === 'loading') return <p>로딩 중...</p>;
   if (status === 'failed') return <p>{error}</p>;
+
+  // questionData가 null인 경우 처리
+  if (!questionData) return <p>질문 데이터를 불러오는 중입니다...</p>;
 
   return (
     <Box p={3} width="100%" sx={{ backgroundColor: 'background.default' }}>
@@ -138,8 +134,8 @@ useEffect(() => {
             label="제목"
             fullWidth
             size="small"
-            value={localQuestionData.title}
-            onChange={(e) => setLocalQuestionData({ ...localQuestionData, title: e.target.value })}
+            value={questionData.title || ''}
+            InputProps={{ readOnly: true }}
           />
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
@@ -147,8 +143,8 @@ useEffect(() => {
                 label="카테고리"
                 fullWidth
                 size="small"
-                value={localQuestionData.category}
-                onChange={(e) => setLocalQuestionData({ ...localQuestionData, category: e.target.value })}
+                value={questionData.question_classification_number || ''}
+                InputProps={{ readOnly: true }}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -156,7 +152,7 @@ useEffect(() => {
                 label="작성자(아이디)"
                 fullWidth
                 size="small"
-                value={localQuestionData.author}
+                value={questionData.user_number || ''}
                 InputProps={{ readOnly: true }}
               />
             </Grid>
@@ -165,7 +161,7 @@ useEffect(() => {
                 label="작성일"
                 fullWidth
                 size="small"
-                value={localQuestionData.date}
+                value={questionData.created_at || ''}
                 InputProps={{ readOnly: true }}
               />
             </Grid>
@@ -173,16 +169,15 @@ useEffect(() => {
           <TextField
             label="내용"
             multiline
-            rows={5}
             fullWidth
             size="small"
-            value={localQuestionData.content}
-            onChange={(e) => setLocalQuestionData({ ...localQuestionData, content: e.target.value })}
+            value={questionData.question_content || ''}
+            InputProps={{ readOnly: true }}
           />
         </Stack>
       </Box>
 
-            {/* 답변 영역 */}
+      {/* 답변 영역 */}
       <Box
         sx={{
           p: 4,
@@ -197,29 +192,13 @@ useEffect(() => {
           답변 정보
         </Typography>
         <Stack spacing={3}>
-          <TextField
-            label="제목"
-            fullWidth
-            size="small"
-            value={
-              localAnswerData && localAnswerData.title
-                ? localAnswerData.title
-                : '이 질문에는 아직 답변이 없습니다.'
-            }
-            onChange={(e) =>
-              setLocalAnswerData({
-                ...localAnswerData,
-                title: e.target.value,
-              })
-            }
-          />
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <TextField
                 label="관리자(아이디)"
                 fullWidth
                 size="small"
-                value={localAnswerData?.admin || ''}
+                value={user.admin_id || ''} // 관리자 아이디
                 InputProps={{ readOnly: true }}
               />
             </Grid>
@@ -228,7 +207,7 @@ useEffect(() => {
                 label="답변일"
                 fullWidth
                 size="small"
-                value={localAnswerData?.answerDate || ''}
+                value={new Date().toLocaleDateString()}  // 오늘 날짜 표시
                 InputProps={{ readOnly: true }}
               />
             </Grid>
@@ -236,24 +215,19 @@ useEffect(() => {
           <TextField
             label="내용"
             multiline
-            rows={5}
             fullWidth
             size="small"
-            value={
-              localAnswerData && localAnswerData.content
-                ? localAnswerData.content
-                : '이 질문에는 아직 답변이 없습니다.'
-            }
-            onChange={(e) =>
-              setLocalAnswerData({
-                ...localAnswerData,
-                content: e.target.value,
-              })
-            }
+            value={answerContent || ''} // 답변 내용
+            onChange={handleAnswerChange}
+            sx={{
+              '& .MuiInputBase-root': {
+                minHeight: '120px',  // 높이를 조금 더 늘려서 텍스트가 잘려 보이지 않게 설정
+                padding: '8px',      // 패딩을 추가해서 텍스트가 너무 붙어 보이지 않게 설정
+              },
+            }}
           />
         </Stack>
       </Box>
-
 
       {/* 하단 버튼 */}
       <Box mt={4} display="flex" justifyContent="space-between">
