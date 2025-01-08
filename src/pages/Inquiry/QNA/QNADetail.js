@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Grid, Stack, Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchQuestionDetail, fetchAnswersByQuestion, updateAnswer, createAnswer } from '../../../redux/slice/qnaSlice';
-import { selectQuestionDetail, selectQnaStatus, selectQnaError, selectAnswers } from '../../../redux/slice/qnaSlice';
+import { fetchQuestionDetail, fetchAnswersByQuestion, updateAnswer, createAnswer } from '../../../redux/slices/qnaSlice';
+import { selectQuestionDetail, selectQnaStatus, selectQnaError, selectAnswers } from '../../../redux/slices/qnaSlice';
 
 const QNADetail = () => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Box, Typography, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Pagination, Select, MenuItem, Button 
 } from '@mui/material';
-import { fetchQnas } from '../../../redux/slice/qnaSlice';
+import { fetchQnas } from '../../../redux/slices/qnaSlice';
 
 const QNAList = () => {
   const dispatch = useDispatch();

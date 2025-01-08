@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Box, Typography, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Pagination, Select, MenuItem 
 } from '@mui/material';
-import { fetchFaqs } from '../../../redux/slice/faqSlice';
+import { fetchFaqs } from '../../../redux/slices/faqSlice';
 
 // FAQ 목록 컴포넌트
 const FAQList = () => {

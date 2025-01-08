@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button, Stack, FormControlLabel, Switch } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchFaqDetail, createFaq, updateFaq } from '../../../redux/slice/faqSlice';
-import { selectFaqDetail, selectStatus, selectError } from '../../../redux/slice/faqSlice';
+import { fetchFaqDetail, createFaq, updateFaq } from '../../../redux/slices/faqSlice';
+import { selectFaqDetail, selectStatus, selectError } from '../../../redux/slices/faqSlice';
 
 const FAQDetail = () => {
   const navigate = useNavigate();
