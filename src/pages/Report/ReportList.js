@@ -10,8 +10,8 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
   const itemsPerPage = 10;
 
   // 리포트 상태 가져오기
-  const reports = useSelector((state) => state.reports.data || []); // reports가 배열이 아닌 경우 빈 배열로 초기화
-  const loading = useSelector((state) => state.reports.loading); // 로딩 상태
+  const reports = useSelector((state) => state.reports.items || []); // reports가 배열이 아닌 경우 빈 배열로 초기화
+  const loading = useSelector((state) => state.reports.status === 'loading'); // 로딩 상태
 
   const [filters, setFilters] = useState({
     order: 'recent',
@@ -20,6 +20,7 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
 
   const [currentPage, setCurrentPage] = useState(1);
 
+  // 도메인 값이 변경될 때마다 리포트 데이터를 새로 가져옴
   useEffect(() => {
     if (domain) {
       dispatch(fetchReport({ domain })); // domain 값이 존재할 때만 호출
@@ -118,31 +119,31 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedData.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={columns.length + 1} align="center">
-                  신고내역이 없습니다
+          {paginatedData.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={columns.length + 1} align="center">
+                신고가 없습니다
+              </TableCell>
+            </TableRow>
+          ) : (
+            paginatedData.map((row, rowIndex) => (
+              <TableRow
+                key={rowIndex}
+                onClick={() => handleRowClick(row.feed_report_number)}
+                sx={{ cursor: 'pointer' }}
+              >
+                <TableCell align="center">
+                  <Checkbox />
                 </TableCell>
-              </TableRow>
-            ) : (
-              paginatedData.map((row, rowIndex) => (
-                <TableRow
-                  key={rowIndex}
-                  onClick={() => handleRowClick(row.feed_report_number)}
-                  sx={{ cursor: 'pointer' }}
-                >
-                  <TableCell align="center">
-                    <Checkbox />
+                {columns.map((column, colIndex) => (
+                  <TableCell key={colIndex} align="center">
+                    {column === '처리일' ? row.report_at || 'null' : row[column] || '-'}
                   </TableCell>
-                  {columns.map((column, colIndex) => (
-                    <TableCell key={colIndex} align="center">
-                      {column === '처리일' ? row.report_at || 'null' : row[column] || '-'}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
+                ))}
+              </TableRow>
+            ))
+          )}
+        </TableBody>
         </Table>
       </TableContainer>
 
@@ -157,6 +158,8 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
     </Box>
   );
 };
+
+
 
 // 리스트 페이지별 내보내기 (각각의 리포트 리스트 컴포넌트)
 export { ReportCommentList } from './Reportlist/ReportCommentList';
