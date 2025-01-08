@@ -15,6 +15,7 @@ import UserDetailManagement from './pages/UserManagement/UserDetailManagement';
 // 공지
 import Notice from './pages/Notice/Notice';
 import NoticeAdd from './pages/Notice/NoticeAdd';
+import NoticeDetail from './pages/Notice/NoticeDetail';
 // 환불
 import RefundList from './pages/Refund/RefundList';
 import RefundDetail from './pages/Refund/RefundDetail';
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
         path: 'notice/add',
         element: <NoticeAdd />,
       },
+      { path: '/dashboard/notice/:noticeId', element: <NoticeDetail /> },
       // 환불 페이지
       { path: 'refund', element: <RefundList /> },
       { path: 'refund/:id', element: <RefundDetail /> },

@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '../redux/slice/authSlice'; // 경로 확인 필요
+import { logout } from '../redux/slices/authSlice'; // 경로 확인 필요
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderColor: 'transparent',

@@ -1,32 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
-  TextField,
   Button,
-  IconButton,
-  Switch,
-  FormControlLabel,
   Stack,
+  CircularProgress,
 } from '@mui/material';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addNotice } from '../../redux/slices/noticeSlice';
 
 const NoticeAdd = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const initialData = {
+  // Redux 또는 Context에서 관리자 ID 가져오기
+  const adminId = useSelector((state) => state.auth.user?.admin_id);
+  const adminNumber = useSelector((state) => state.auth.user?.admin_number);
+  const [formData, setFormData] = useState({
     title: '',
-    admin: 'admin123',
-    date: '2024-12-21',
-    photo: '',
-    isPublic: false,
     content: '',
+    photos: [], // 다중 파일 저장
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false); // 요청 중 상태
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    alert('공지 추가 완료');
-    navigate('/dashboard/notice');
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setFormData((prev) => ({
+      ...prev,
+      photos: files,
+    }));
+  };
+
+  const handleSave = async () => {
+    const { title, content, photos } = formData;
+
+    if (!title || !content) {
+      alert('제목과 내용을 입력해주세요.');
+      return;
+    }
+
+    const data = new FormData();
+    data.append('title', title);
+    data.append('content', content);
+    data.append('admin_id', adminId); // 관리자 ID 추가
+    data.append('admin_number', adminNumber); // 관리자 Number 추가
+    data.append('imageType', 'notice'); // 이미지 타입 추가
+
+    // 'noticePicture' 필드로 파일 추가
+    photos.forEach((photo) => data.append('noticePicture', photo));
+
+    setIsSubmitting(true);
+
+    dispatch(addNotice(data)).then((result) => {
+      setIsSubmitting(false);
+
+      if (addNotice.fulfilled.match(result)) {
+        alert('공지 추가 완료');
+        navigate('/dashboard/notice');
+      } else {
+        alert(
+          '공지 추가 실패: ' +
+            (result.payload?.message || '알 수 없는 오류가 발생했습니다.')
+        );
+      }
+    });
   };
 
   return (
@@ -51,8 +95,8 @@ const NoticeAdd = () => {
         variant="h4"
         mb={4}
         sx={{
-          textAlign: 'left', // 텍스트를 왼쪽 정렬
-          width: '100%', // 부모 요소 너비에 맞춤
+          textAlign: 'left',
+          width: '100%',
         }}
       >
         공지 추가
@@ -72,65 +116,54 @@ const NoticeAdd = () => {
       >
         {/* 입력 필드 */}
         <Stack spacing={6}>
-          <TextField
-            label="제목"
-            fullWidth
-            size="large"
-            defaultValue={initialData.title}
-            InputLabelProps={{ shrink: true }}
+          <input
+            type="text"
+            placeholder="제목을 입력하세요"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+            }}
           />
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={6}>
-            <TextField
-              label="관리자(아이디)"
-              fullWidth
-              size="large"
-              InputProps={{ readOnly: true }}
-              value={initialData.admin}
-              InputLabelProps={{ shrink: true }}
-            />
+          <textarea
+            placeholder="내용을 입력하세요"
+            name="content"
+            value={formData.content}
+            onChange={handleInputChange}
+            rows="8"
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+            }}
+          />
 
-            <TextField
-              label="게시일"
-              fullWidth
-              size="large"
-              InputProps={{ readOnly: true }}
-              value={initialData.date}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Stack>
-
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={6}>
-            <TextField
-              label="첨부사진"
-              fullWidth
-              size="large"
-              InputProps={{
-                endAdornment: (
-                  <IconButton component="label">
-                    <PhotoCamera />
-                    <input type="file" hidden />
-                  </IconButton>
-                ),
+          <Box>
+            <Typography variant="subtitle1" mb={1}>
+              첨부사진:
+            </Typography>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+              style={{
+                width: '100%',
+                padding: '12px',
+                fontSize: '16px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
               }}
-              InputLabelProps={{ shrink: true }}
             />
-
-            <FormControlLabel
-              control={<Switch defaultChecked={initialData.isPublic} />}
-              label="현재 공개 여부"
-            />
-          </Stack>
-
-          <TextField
-            label="내용"
-            multiline
-            rows={8}
-            fullWidth
-            size="large"
-            defaultValue={initialData.content}
-            InputLabelProps={{ shrink: true }}
-          />
+          </Box>
         </Stack>
 
         {/* 하단 버튼 */}
@@ -140,6 +173,7 @@ const NoticeAdd = () => {
             color="secondary"
             onClick={() => navigate('/dashboard/notice')}
             sx={{ padding: '12px 24px', fontSize: '16px' }}
+            disabled={isSubmitting}
           >
             취소
           </Button>
@@ -148,8 +182,9 @@ const NoticeAdd = () => {
             color="primary"
             onClick={handleSave}
             sx={{ padding: '12px 24px', fontSize: '16px' }}
+            disabled={isSubmitting}
           >
-            저장
+            {isSubmitting ? <CircularProgress size={24} /> : '저장'}
           </Button>
         </Box>
       </Box>

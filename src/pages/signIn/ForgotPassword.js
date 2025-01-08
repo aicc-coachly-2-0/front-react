@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { resetPassword } from '../../redux/slice/authSlice';
+import { resetPassword } from '../../redux/slices/authSlice';
 
 function ForgotPassword({ open, handleClose }) {
   const dispatch = useDispatch();
