@@ -4,6 +4,79 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchReport } from '../../redux/slices/reportSlice';
 
+// 도메인별 컬럼 매핑 함수
+function mapColumnsData(domain, data) {
+  const columnMappings = {
+    feed: {
+      'NO': 'feed_report_number',
+      '신고자(아이디)': 'user_number',
+      '신고사유': 'report_reason',
+      '신고일': 'report_at',
+      '처리일': 'processed_at',
+      '처리 상태': 'state',
+    },
+    feed_comment: {
+      'NO': 'feed_comment_report_number',
+      '신고자(아이디)': 'user_number',
+      '신고사유': 'report_reason',
+      '신고일': 'report_at',
+      '처리일': 'processed_at',
+      '처리 상태': 'state',
+    },
+    post: {
+      'NO': 'post_report_number',
+      '신고자(아이디)': 'user_number',
+      '신고사유': 'report_reason',
+      '신고일': 'report_at',
+      '처리일': 'processed_at',
+      '처리 상태': 'state',
+    },
+    post_comment: {
+      'NO': 'post_comment_report_number',
+      '신고자(아이디)': 'user_number',
+      '신고사유': 'report_reason',
+      '신고일': 'report_at',
+      '처리일': 'processed_at',
+      '처리 상태': 'state',
+    },
+    mission: {
+      'NO': 'mission_report_number',
+      '신고자(아이디)': 'user_number',
+      '신고사유': 'report_reason',
+      '신고일': 'report_at',
+      '처리일': 'processed_at',
+      '처리 상태': 'state',
+    },
+    mission_validation: {
+      'NO': 'mission_validation_report_number',
+      '신고자(아이디)': 'user_number',
+      '신고사유': 'report_reason',
+      '신고일': 'report_at',
+      '처리일': 'processed_at',
+      '처리 상태': 'state',
+    },
+    user: {
+      'NO': 'user_report_number',
+      '신고자(아이디)': 'user_number',
+      '신고사유': 'report_reason',
+      '신고일': 'report_at',
+      '처리일': 'processed_at',
+      '처리 상태': 'state',
+    },
+  };
+
+  const mappings = columnMappings[domain] || {};
+  
+  // 데이터 매핑: 해당 도메인에 맞는 데이터를 가져와서 변환
+  return data.map(item => {
+    let mappedItem = {};
+    for (let column in mappings) {
+      mappedItem[column] = item[mappings[column]] || '-';  // 필드가 없으면 '-' 표시
+    }
+    return mappedItem;
+  });
+}
+
 const ReportList = ({ title, columns, domain, detailPath }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -69,6 +142,9 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
     return <Typography>Loading...</Typography>;
   }
 
+  // 도메인에 맞는 컬럼 데이터 매핑
+  const mappedData = mapColumnsData(domain, paginatedData);
+
   return (
     <Box p={3} width="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
       <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
@@ -126,7 +202,7 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((row, rowIndex) => (
+              mappedData.map((row, rowIndex) => (
                 <TableRow
                   key={rowIndex}
                   onClick={() => handleRowClick(row.feed_report_number)}
@@ -137,15 +213,9 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
                   </TableCell>
                   {columns.map((column, colIndex) => (
                     <TableCell key={colIndex} align="center">
-                      {column === '처리일' ? row.report_at || 'null' : row[column] || '-'}
+                      {row[column] || '-'}
                     </TableCell>
                   ))}
-                  {/* 도메인에 따른 추가적인 처리 */}
-                  {domain === 'comment' && (
-                    <TableCell align="center">
-                      댓글 내용 {row.comment || '-'}
-                    </TableCell>
-                  )}
                 </TableRow>
               ))
             )}
@@ -165,8 +235,6 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
   );
 };
 
-
-// 리스트 페이지별 내보내기 (각각의 리포트 리스트 컴포넌트)
 export { ReportFeedCommentList } from './Reportlist/ReportFeedCommentList';
 export { ReportPostCommentList } from './Reportlist/ReportPostCommentList';
 export { ReportUserList } from './Reportlist/ReportUserList';
@@ -174,6 +242,5 @@ export { ReportPostList } from './Reportlist/ReportPostList';
 export { ReportMissionAuthList } from './Reportlist/ReportMissionAuthList';
 export { ReportMissionRoomList } from './Reportlist/ReportMissionRoomList';
 export { ReportFeedList } from './Reportlist/ReportFeedList';
-
 
 export default ReportList;

@@ -28,11 +28,12 @@ export const fetchDetailReport = createAsyncThunk(
   }
 );
 
+// 도메인별 전체 신고 조회 
 export const fetchReport = createAsyncThunk(
   'reports/fetchReport',
   async ({ domain }) => {
     const response = await axios.get(`${BASE_URL}/report/${domain}`);
-    return response.data; // axios는 자동으로 JSON을 파싱해주기 때문에 따로 response.json()이 필요하지 않음
+    return response.data; 
   }
 );
 // 도메인별 신고 접수 

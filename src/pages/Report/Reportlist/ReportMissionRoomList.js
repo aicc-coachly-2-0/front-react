@@ -4,7 +4,7 @@ export const ReportMissionRoomList = () => {
   const columns = [
     'NO',
     '신고자(아이디)',
-    '미션방 제목',
+    '신고사유',
     '신고일',
     '처리일',
     '처리 상태',

@@ -4,7 +4,7 @@ export const ReportFeedList = () => {
   const columns = [
     'NO',
     '신고자(아이디)',
-    '피드 내용',
+    '신고사유',
     '신고일',
     '처리일',
     '처리 상태',
