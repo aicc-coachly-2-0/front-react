@@ -1,133 +1,157 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Box, Typography, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Pagination, Select, MenuItem 
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Checkbox,
+  Pagination,
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { fetchFaqs } from '../../../redux/slices/faqSlice';
 
-// FAQ 목록 컴포넌트
-const FAQList = () => {
-  const dispatch = useDispatch();
-  const { items: faqs, status, error } = useSelector((state) => state.faqs);
+const FAQ = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // 추가 페이지로 이동
-  const handleAddFAQ = () => navigate('/dashboard/inquiry/faq/add');
-   // 상세 페이지로 이동
-  const handleRowClick = (faq_number) => {
-    navigate(`/dashboard/inquiry/faq/${faq_number}`);
-  };
+  // Redux 상태
+  const {
+    items: faqs = [],
+    status,
+    error,
+  } = useSelector((state) => state.faqs);
 
-  // 선택된 FAQ 항목 ID 저장
-  const [selectedFaqs, setSelectedFaqs] = useState([]);
-  
-  // 필터 및 정렬 상태 저장
+  // 상태 관리
   const [filters, setFilters] = useState({
     search: '',
     sort: 'recent',
-    category: 'all',
     status: 'all',
-    sortDirection: 'desc',
   });
-
+  const [selectedFaqs, setSelectedFaqs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   useEffect(() => {
-    // FAQ 데이터 로드
     if (status === 'idle') {
       dispatch(fetchFaqs());
     }
-  }, [dispatch, status]);
+  }, [status, dispatch]);
 
-  // 페이지 변경 시 선택 초기화
-  useEffect(() => {
-    setSelectedFaqs([]);
-  }, [currentPage]);
+  // FAQ 추가 페이지로 이동
+  const handleAddFAQ = () => {
+    navigate('/dashboard/inquiry/faq/add'); // 경로 수정
+  };
 
-  if (status === 'loading') return <p>로딩 중...</p>;
-  if (status === 'failed') return <p>에러 발생: {error}</p>;
-
-  // 필터 조건에 맞는 FAQ 필터링
-  const filteredFaqs = faqs.filter(
-    (faq) =>
-      (filters.status === 'all' || faq.state === filters.status) &&
-      (faq.content && faq.content.includes(filters.search)) // faq.content가 정의되어 있는지 확인
-  );
-
-  // 정렬된 FAQ 목록 생성
-  const sortedFaqs = [...filteredFaqs].sort((a, b) => {
-    const compareKey = filters.sort === 'recent' ? 'created_at' : 'faq_number';
-    const isAscending = filters.sortDirection === 'asc';
-
-    const aValue = new Date(a[compareKey]);
-    const bValue = new Date(b[compareKey]);
-
-    return isAscending ? aValue - bValue : bValue - aValue;
-  });
-
-  // 현재 페이지에 해당하는 FAQ 목록
-  const paginatedFaqs = sortedFaqs.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
- 
+  // FAQ 선택 삭제
   const handleDeleteSelected = () => {
     if (selectedFaqs.length === 0) {
       alert('삭제할 항목을 선택해주세요.');
       return;
     }
     if (window.confirm('선택된 FAQ를 삭제하시겠습니까?')) {
-      // 삭제 요청을 디스패치하거나 상태 관리
-      alert('삭제 완료');
+      alert('선택된 FAQ가 삭제되었습니다.');
     }
   };
 
-  const handleCheckboxChange = (id) => {
+  // FAQ 선택 처리
+  const handleCheckboxChange = (faqId) => {
     setSelectedFaqs((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(faqId)
+        ? prev.filter((id) => id !== faqId)
+        : [...prev, faqId]
     );
   };
 
-  const handlePageChange = (event, value) => setCurrentPage(value);
-
-  const handleSortChange = (sortKey) => {
-    setFilters((prev) => {
-      const newSortDirection = sortKey === 'recent' ? 'desc' : 'asc';  // 'recent'은 내림차순, 'oldest'는 오름차순
-      return {
-        ...prev,
-        sort: sortKey,
-        sortDirection: newSortDirection,  // 정렬 기준에 맞게 방향을 설정
-      };
-    });
+  // 페이지 변경 처리
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
+  // 정렬 변경 처리
+  const handleSortChange = (sortKey) => {
+    setFilters((prev) => ({
+      ...prev,
+      sort: sortKey,
+    }));
+  };
+
+  // 필터링된 FAQ 목록
+  const filteredFaqs = faqs.filter(
+    (faq) =>
+      (filters.status === 'all' || faq.state === filters.status) &&
+      faq.content?.toLowerCase().includes(filters.search.toLowerCase())
+  );
+
+  // 페이지네이션 처리
+  const paginatedFaqs = filteredFaqs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // FAQ 상태에 따른 로딩 및 에러 처리
+  if (status === 'loading') {
+    return (
+      <Typography variant="h6" align="center">
+        FAQ를 불러오는 중입니다...
+      </Typography>
+    );
+  }
+
+  if (status === 'failed') {
+    return (
+      <Typography variant="h6" align="center" color="error">
+        에러 발생: {error}
+      </Typography>
+    );
+  }
+
   return (
-    <Box p={3} width="100%" sx={{ overflowY: 'auto' }}>
+    <Box p={3} width="100%" height="100%" sx={{ overflowY: 'auto' }}>
       {/* 상단 영역 */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
         <Typography variant="h5" fontWeight="bold">
-          문의 사항 관리 (FAQ)
+          자주 묻는 질문 (FAQ)
         </Typography>
         <Box display="flex" gap={2}>
           <Button variant="contained" color="primary" onClick={handleAddFAQ}>
             항목 추가
           </Button>
-          <Button variant="contained" color="error" onClick={handleDeleteSelected}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeleteSelected}
+          >
             선택 삭제
           </Button>
         </Box>
       </Box>
 
       {/* 검색 및 필터 영역 */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
         <Box display="flex" gap={2}>
           <Select
             value={filters.sort}
-            onChange={(e) => 
-              handleSortChange(e.target.value)}
+            onChange={(e) => handleSortChange(e.target.value)}
             size="small"
           >
             <MenuItem value="recent">최근 작성순</MenuItem>
@@ -141,56 +165,58 @@ const FAQList = () => {
             size="small"
           >
             <MenuItem value="all">전체</MenuItem>
-            <MenuItem value="active">정상</MenuItem>
-            <MenuItem value="inactive">정지</MenuItem>
+            <MenuItem value="active">활성</MenuItem>
+            <MenuItem value="archived">보관</MenuItem>
           </Select>
         </Box>
-        <TextField
-          placeholder="검색어를 입력하세요"
-          size="small"
-          value={filters.search}
-          onChange={(e) =>
-            setFilters((prev) => ({ ...prev, search: e.target.value }))
-          }
-        />
+        <Box display="flex" alignItems="center">
+          <TextField
+            placeholder="검색어를 입력하세요"
+            size="small"
+            value={filters.search}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, search: e.target.value }))
+            }
+          />
+          <Button>
+            <SearchIcon />
+          </Button>
+        </Box>
       </Box>
 
-      {/* FAQ 테이블 */}
+      {/* 테이블 */}
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center">
-                <Checkbox />
-              </TableCell>
-              {['NO', '작성자', '카테고리', '제목', '게시일', '상태'].map(
-                (column, index) => (
-                  <TableCell key={index} align="center">
-                    {column}
-                  </TableCell>
-                )
-              )}
+              <TableCell></TableCell>
+              <TableCell>NO</TableCell>
+              <TableCell>작성자</TableCell>
+              <TableCell>내용</TableCell>
+              <TableCell>게시일</TableCell>
+              <TableCell>상태</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-          {paginatedFaqs.map((faq) => (
-            <TableRow key={faq.faq_number} onClick={() => handleRowClick(faq.faq_number)}>
-              <TableCell align="center">
-                <Checkbox
-                  checked={selectedFaqs.includes(faq.faq_number)}
-                  onChange={() => handleCheckboxChange(faq.faq_number)}
-                />
-              </TableCell>
-              <TableCell align="center">{faq.faq_number}</TableCell>
-              <TableCell align="center">{faq.admin_number}</TableCell>
-              <TableCell align="center">{faq.question_classification_number}</TableCell>
-              <TableCell align="center">{faq.content}</TableCell>
-              <TableCell align="center">
-                {new Date(faq.created_at).toLocaleDateString()}
-              </TableCell>
-              <TableCell align="center">{faq.state}</TableCell>
-            </TableRow>
-          ))}
+            {paginatedFaqs.map((faq) => (
+              <TableRow
+                key={faq.faq_number}
+                onClick={() => navigate(`/dashboard/inquiry/faq/${faq.faq_number}`)} // 경로 수정
+                style={{ cursor: 'pointer' }}
+              >
+                <TableCell>
+                  <Checkbox
+                    checked={selectedFaqs.includes(faq.faq_number)}
+                    onChange={() => handleCheckboxChange(faq.faq_number)}
+                  />
+                </TableCell>
+                <TableCell>{faq.faq_number}</TableCell>
+                <TableCell>{faq.admin_number}</TableCell>
+                <TableCell>{faq.content}</TableCell>
+                <TableCell>{faq.created_at}</TableCell>
+                <TableCell>{faq.state}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -208,4 +234,4 @@ const FAQList = () => {
   );
 };
 
-export default FAQList;
+export default FAQ;

@@ -4,67 +4,66 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8000/faqs';
 
 // FAQ 전체 조회
-export const fetchFaqs = createAsyncThunk('faqs/fetchFaqs', async () => {
+export const fetchFaqs = createAsyncThunk(
+  'faqs/fetchFaqs', 
+  async () => {
   // 로컬 스토리지에서 토큰 가져오기
-  const token = localStorage.getItem('token'); // 로컬 스토리지에서 'token'을 가져옵니다.
-
-  if (!token) {
-    throw new Error('로그인이 필요합니다.'); // 토큰이 없으면 오류를 발생시킵니다.
-  }
-
-  // 서버에 요청을 보낼 때 토큰을 Authorization 헤더에 포함
-  const response = await axios.get(`${BASE_URL}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
+    const token = localStorage.getItem('token'); // 로컬 스토리지에서 'token'을 가져옵니다.
+    if (!token) {
+      throw new Error('로그인이 필요합니다.'); // 토큰이 없으면 오류를 발생시킵니다.
+    }
+    // 서버에 요청을 보낼 때 토큰을 Authorization 헤더에 포함
+    const response = await axios.get(`${BASE_URL}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   return response.data; // 서버에서 받은 FAQ 데이터
 });
 
 // FAQ 상세 조회
-export const fetchFaqDetail = createAsyncThunk('faqs/fetchFaqDetail', async (faq_number) => {
-  const token = localStorage.getItem('token'); // 로컬 스토리지에서 'token'을 가져옵니다.
-
-  if (!token) {
-    throw new Error('로그인이 필요합니다.'); // 토큰이 없으면 오류를 발생시킵니다.
-  }
-
-  // 서버에 요청을 보낼 때 토큰을 Authorization 헤더에 포함
-  const response = await axios.get(`${BASE_URL}/${faq_number}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
+export const fetchFaqDetail = createAsyncThunk(
+  'faqs/fetchFaqDetail', 
+    async (faq_number) => {
+    const token = localStorage.getItem('token'); // 로컬 스토리지에서 'token'을 가져옵니다.
+    if (!token) {
+      throw new Error('로그인이 필요합니다.'); // 토큰이 없으면 오류를 발생시킵니다.
+    }
+    // 서버에 요청을 보낼 때 토큰을 Authorization 헤더에 포함
+    const response = await axios.get(`${BASE_URL}/${faq_number}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   return response.data; // 서버에서 받은 FAQ 상세 데이터
 });
 
 // FAQ 생성
-export const createFaq = createAsyncThunk('faqs/createFaq', async (faqData) => {
-  const token = localStorage.getItem('token');
-
-  if (!token) {
-    throw new Error('로그인이 필요합니다.');
-  }
-
-  const response = await axios.post(`${BASE_URL}`, faqData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
+export const createFaq = createAsyncThunk(
+  'faqs/createFaq', 
+  async (faqData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('로그인이 필요합니다.');
+    }
+    const response = await axios.post(`${BASE_URL}`, faqData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   return response.data;
 });
 
 // FAQ 수정
-export const updateFaq = createAsyncThunk('faqs/updateFaq', async ({ faq_number, faqData }) => {
-  const token = localStorage.getItem('token');
-
-  if (!token) {
-    throw new Error('로그인이 필요합니다.');
-  }
-  console.log('수정될 FAQ 번호:', faq_number);
-  console.log('수정될 데이터:', faqData);
-
-  const response = await axios.patch(`${BASE_URL}/${faq_number}`, faqData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  console.log('API 응답:', response.data);
+export const updateFaq = createAsyncThunk(
+  'faqs/updateFaq', 
+  async ({ faq_number, faqData }) => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      throw new Error('로그인이 필요합니다.');
+    }
+    console.log('수정될 FAQ 번호:', faq_number);
+    console.log('수정될 데이터:', faqData);
+  
+    const response = await axios.patch(`${BASE_URL}/${faq_number}`, faqData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log('API 응답:', response.data);
 
   return response.data;
 });

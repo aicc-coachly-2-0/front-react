@@ -57,9 +57,6 @@ const QNAList = () => {
     <Box p={3} width="100%" sx={{ overflowY: 'auto' }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5" fontWeight="bold">Q&A 관리</Typography>
-        <Button variant="contained" onClick={() => navigate('/dashboard/inquiry/qna/add')}>
-          질문 추가
-        </Button>
       </Box>
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
