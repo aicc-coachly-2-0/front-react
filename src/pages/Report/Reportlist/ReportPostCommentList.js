@@ -1,10 +1,10 @@
 import ReportListPage from '../ReportList';
 
-export const ReportPostList = () => {
+export const ReportPostCommentList = () => {
   const columns = [
     'NO',
     '신고자(아이디)',
-    '게시글 제목',
+    '댓글 내용',
     '신고일',
     '처리일',
     '처리 상태',
@@ -12,10 +12,10 @@ export const ReportPostList = () => {
 
   return (
     <ReportListPage
-      title="신고 접수 - 게시글"
+      title="신고 접수 - 게시글 댓글"
       columns={columns}
-      detailPath="/dashboard/reports/posts"
-      domain="post" // domain 값을 추가로 전달
+      domain={['post_comment']} // domain 배열로 전달
+      detailPath="/dashboard/reports/post_comments"
     />
   );
 };

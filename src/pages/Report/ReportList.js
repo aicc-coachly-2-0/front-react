@@ -2,16 +2,16 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Box, Typography, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Select, MenuItem, Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchReport } from '../../redux/slices/reportSlice'; // fetchReport 액션 추가
+import { fetchReport } from '../../redux/slices/reportSlice';
 
 const ReportList = ({ title, columns, domain, detailPath }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // dispatch 사용
+  const dispatch = useDispatch();
   const itemsPerPage = 10;
 
   // 리포트 상태 가져오기
-  const reports = useSelector((state) => state.reports.items || []); // reports가 배열이 아닌 경우 빈 배열로 초기화
-  const loading = useSelector((state) => state.reports.status === 'loading'); // 로딩 상태
+  const reports = useSelector((state) => state.reports.items || []);
+  const loading = useSelector((state) => state.reports.status === 'loading');
 
   const [filters, setFilters] = useState({
     order: 'recent',
@@ -25,7 +25,7 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
     if (domain) {
       dispatch(fetchReport({ domain })); // domain 값이 존재할 때만 호출
     }
-  }, [domain, dispatch]);
+  }, [domain, dispatch]); // domain 값이 변경될 때마다 리포트 새로 호출
 
   // 필터링 및 정렬된 데이터 계산
   const filteredData = useMemo(() => {
@@ -66,7 +66,7 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
   };
 
   if (loading) {
-    return <Typography>Loading...</Typography>; // 로딩 중이면 메시지 표시
+    return <Typography>Loading...</Typography>;
   }
 
   return (
@@ -119,31 +119,37 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-          {paginatedData.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={columns.length + 1} align="center">
-                신고가 없습니다
-              </TableCell>
-            </TableRow>
-          ) : (
-            paginatedData.map((row, rowIndex) => (
-              <TableRow
-                key={rowIndex}
-                onClick={() => handleRowClick(row.feed_report_number)}
-                sx={{ cursor: 'pointer' }}
-              >
-                <TableCell align="center">
-                  <Checkbox />
+            {paginatedData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length + 1} align="center">
+                  신고가 없습니다
                 </TableCell>
-                {columns.map((column, colIndex) => (
-                  <TableCell key={colIndex} align="center">
-                    {column === '처리일' ? row.report_at || 'null' : row[column] || '-'}
-                  </TableCell>
-                ))}
               </TableRow>
-            ))
-          )}
-        </TableBody>
+            ) : (
+              paginatedData.map((row, rowIndex) => (
+                <TableRow
+                  key={rowIndex}
+                  onClick={() => handleRowClick(row.feed_report_number)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <TableCell align="center">
+                    <Checkbox />
+                  </TableCell>
+                  {columns.map((column, colIndex) => (
+                    <TableCell key={colIndex} align="center">
+                      {column === '처리일' ? row.report_at || 'null' : row[column] || '-'}
+                    </TableCell>
+                  ))}
+                  {/* 도메인에 따른 추가적인 처리 */}
+                  {domain === 'comment' && (
+                    <TableCell align="center">
+                      댓글 내용 {row.comment || '-'}
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
 
@@ -160,13 +166,14 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
 };
 
 
-
 // 리스트 페이지별 내보내기 (각각의 리포트 리스트 컴포넌트)
-export { ReportCommentList } from './Reportlist/ReportCommentList';
+export { ReportFeedCommentList } from './Reportlist/ReportFeedCommentList';
+export { ReportPostCommentList } from './Reportlist/ReportPostCommentList';
 export { ReportUserList } from './Reportlist/ReportUserList';
 export { ReportPostList } from './Reportlist/ReportPostList';
 export { ReportMissionAuthList } from './Reportlist/ReportMissionAuthList';
 export { ReportMissionRoomList } from './Reportlist/ReportMissionRoomList';
 export { ReportFeedList } from './Reportlist/ReportFeedList';
+
 
 export default ReportList;

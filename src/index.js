@@ -26,12 +26,13 @@ import QNAList from './pages/Inquiry/QNA/QNAList';
 import QNADetail from './pages/Inquiry/QNA/QNADetail';
 // 신고
 import {
-  ReportCommentList,
+  ReportFeedCommentList,
   ReportUserList,
   ReportPostList,
   ReportMissionAuthList,
   ReportMissionRoomList,
   ReportFeedList,
+  ReportPostCommentList,
 } from './pages/Report/ReportList';
 import ReportDetails from './pages/Report/ReportDetails';
 
@@ -65,7 +66,8 @@ const router = createBrowserRouter([
       { path: 'inquiry/qna', element: <QNAList /> },
       { path: 'inquiry/qna/:question_number', element: <QNADetail /> },
       // 신고 접수
-      { path: 'reports/comments', element: <ReportCommentList /> },
+      { path: 'reports/post_comments', element: <ReportPostCommentList /> },
+      { path: 'reports/feed_comments', element: <ReportFeedCommentList /> },
       { path: 'reports/users', element: <ReportUserList /> },
       { path: 'reports/posts', element: <ReportPostList /> },
       { path: 'reports/mission_validations', element: <ReportMissionAuthList /> },

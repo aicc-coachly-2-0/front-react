@@ -27,12 +27,13 @@ const mainListItems = [
     text: '신고 접수',
     icon: <AssignmentRoundedIcon />,
     subItems: [
-      { text: '댓글 신고', path: '/dashboard/reports/comments' },
+      { text: '유저 신고', path: '/dashboard/reports/users' },
+      { text: '게시글 댓글 신고', path: '/dashboard/reports/post_comments' },
+      { text: '피드댓글 신고', path: '/dashboard/reports/feed_comments' },
       { text: '게시글 신고', path: '/dashboard/reports/posts' },
+      { text: '피드 신고', path: '/dashboard/reports/feeds' },
       { text: '미션 인증 신고', path: '/dashboard/reports/mission_validations' },
       { text: '미션방 신고', path: '/dashboard/reports/missions' },
-      { text: '피드 신고', path: '/dashboard/reports/feeds' },
-      { text: '유저 신고', path: '/dashboard/reports/users' },
     ],
   },
   {

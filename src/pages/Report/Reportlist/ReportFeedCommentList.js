@@ -1,6 +1,6 @@
 import ReportListPage from '../ReportList';
 
-export const ReportCommentList = () => {
+export const ReportFeedCommentList = () => {
   const columns = [
     'NO',
     '신고자(아이디)',
@@ -12,10 +12,10 @@ export const ReportCommentList = () => {
 
   return (
     <ReportListPage
-      title="신고 접수 - 댓글"
+      title="신고 접수 - 피드댓글"
       columns={columns}
-      detailPath="/dashboard/reports/comments"
-      domain="comment" // domain 값을 추가로 전달
+      domain={['feed_comment']} // domain 배열로 전달
+      detailPath="/dashboard/reports/feed_comments"
     />
   );
 };
