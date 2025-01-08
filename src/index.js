@@ -60,9 +60,10 @@ const router = createBrowserRouter([
       { path: 'refund/:id', element: <RefundDetail /> },
       // 문의 사항 페이지
       { path: 'inquiry/faq', element: <FAQList /> },
+      { path: 'inquiry/faq/:faq_number', element: <FAQDetail /> },
       { path: 'inquiry/faq/add', element: <FAQDetail /> },
       { path: 'inquiry/qna', element: <QNAList /> },
-      { path: 'inquiry/qna/:id', element: <QNADetail /> },
+      { path: 'inquiry/qna/:question_number', element: <QNADetail /> },
       // 신고 접수
       { path: 'reports/comments', element: <ReportCommentList /> },
       { path: 'reports/users', element: <ReportUserList /> },

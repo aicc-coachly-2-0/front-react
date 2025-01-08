@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
   Button,
+  Select,
+  MenuItem,
   TextField,
   Table,
   TableBody,
@@ -13,100 +14,109 @@ import {
   TableRow,
   Checkbox,
   Pagination,
-  Select,
-  MenuItem,
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchFaqs } from '../../../redux/slices/faqSlice';
 
-const FAQList = () => {
+const FAQ = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [faqs, setFaqs] = useState(
-    Array.from({ length: 50 }, (_, index) => ({
-      id: 50 - index,
-      author: index % 2 === 0 ? '박준' : '이수',
-      category: index % 3 === 0 ? '공지' : '이벤트',
-      title: `${50 - index}번째 FAQ 제목입니다.`,
-      date: `2024-12-${21 - (index % 10)}T05:23:00Z`, // ISO 형식으로 날짜 저장
-      status: index % 2 === 0 ? '정상' : '정지',
-    }))
-  );
+  // Redux 상태
+  const {
+    items: faqs = [],
+    status,
+    error,
+  } = useSelector((state) => state.faqs);
 
-  const [selectedFaqs, setSelectedFaqs] = useState([]);
+  // 상태 관리
   const [filters, setFilters] = useState({
     search: '',
     sort: 'recent',
-    category: 'all',
     status: 'all',
-    sortDirection: 'desc',
   });
-
+  const [selectedFaqs, setSelectedFaqs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchFaqs());
+    }
+  }, [status, dispatch]);
+
+  // FAQ 추가 페이지로 이동
   const handleAddFAQ = () => {
-    navigate('/dashboard/inquiry/faq/add');
+    navigate('/dashboard/inquiry/faq/add'); // 경로 수정
   };
 
+  // FAQ 선택 삭제
   const handleDeleteSelected = () => {
     if (selectedFaqs.length === 0) {
       alert('삭제할 항목을 선택해주세요.');
       return;
     }
     if (window.confirm('선택된 FAQ를 삭제하시겠습니까?')) {
-      setFaqs((prev) => prev.filter((faq) => !selectedFaqs.includes(faq.id)));
-      setSelectedFaqs([]);
-      alert('삭제 완료');
+      alert('선택된 FAQ가 삭제되었습니다.');
     }
   };
 
-  const handleCheckboxChange = (id) => {
+  // FAQ 선택 처리
+  const handleCheckboxChange = (faqId) => {
     setSelectedFaqs((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(faqId)
+        ? prev.filter((id) => id !== faqId)
+        : [...prev, faqId]
     );
   };
 
-  useEffect(() => {
-    // 페이지나 데이터 변경 시 선택 초기화
-    setSelectedFaqs([]);
-  }, [currentPage, faqs]);
-
-  const filteredFaqs = faqs.filter(
-    (faq) =>
-      (filters.status === 'all' || faq.status === filters.status) &&
-      (filters.category === 'all' || faq.category === filters.category) &&
-      faq.title.includes(filters.search)
-  );
-
+  // 페이지 변경 처리
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
 
+  // 정렬 변경 처리
   const handleSortChange = (sortKey) => {
     setFilters((prev) => ({
       ...prev,
       sort: sortKey,
-      sortDirection:
-        prev.sort === sortKey && prev.sortDirection === 'asc' ? 'desc' : 'asc',
     }));
   };
 
-  const sortedFaqs = [...filteredFaqs].sort((a, b) => {
-    const compareKey = filters.sort === 'recent' ? 'date' : 'id';
-    const isAscending = filters.sortDirection === 'asc';
+  // 필터링된 FAQ 목록
+  const filteredFaqs = faqs.filter(
+    (faq) =>
+      (filters.status === 'all' || faq.state === filters.status) &&
+      faq.content?.toLowerCase().includes(filters.search.toLowerCase())
+  );
 
-    const aValue = compareKey === 'date' ? new Date(a.date) : a.id;
-    const bValue = compareKey === 'date' ? new Date(b.date) : b.id;
-
-    return isAscending ? aValue - bValue : bValue - aValue;
-  });
-
-  const paginatedFaqs = sortedFaqs.slice(
+  // 페이지네이션 처리
+  const paginatedFaqs = filteredFaqs.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // FAQ 상태에 따른 로딩 및 에러 처리
+  if (status === 'loading') {
+    return (
+      <Typography variant="h6" align="center">
+        FAQ를 불러오는 중입니다...
+      </Typography>
+    );
+  }
+
+  if (status === 'failed') {
+    return (
+      <Typography variant="h6" align="center" color="error">
+        에러 발생: {error}
+      </Typography>
+    );
+  }
+
   return (
-    <Box p={3} width="100%" sx={{ overflowY: 'auto' }}>
+    <Box p={3} width="100%" height="100%" sx={{ overflowY: 'auto' }}>
       {/* 상단 영역 */}
       <Box
         display="flex"
@@ -115,7 +125,7 @@ const FAQList = () => {
         mb={2}
       >
         <Typography variant="h5" fontWeight="bold">
-          문의 사항 관리 (FAQ)
+          자주 묻는 질문 (FAQ)
         </Typography>
         <Box display="flex" gap={2}>
           <Button variant="contained" color="primary" onClick={handleAddFAQ}>
@@ -148,17 +158,6 @@ const FAQList = () => {
             <MenuItem value="oldest">오래된 작성순</MenuItem>
           </Select>
           <Select
-            value={filters.category}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, category: e.target.value }))
-            }
-            size="small"
-          >
-            <MenuItem value="all">전체</MenuItem>
-            <MenuItem value="공지">공지</MenuItem>
-            <MenuItem value="이벤트">이벤트</MenuItem>
-          </Select>
-          <Select
             value={filters.status}
             onChange={(e) =>
               setFilters((prev) => ({ ...prev, status: e.target.value }))
@@ -166,8 +165,8 @@ const FAQList = () => {
             size="small"
           >
             <MenuItem value="all">전체</MenuItem>
-            <MenuItem value="정상">정상</MenuItem>
-            <MenuItem value="정지">정지</MenuItem>
+            <MenuItem value="active">활성</MenuItem>
+            <MenuItem value="archived">보관</MenuItem>
           </Select>
         </Box>
         <Box display="flex" alignItems="center">
@@ -179,6 +178,9 @@ const FAQList = () => {
               setFilters((prev) => ({ ...prev, search: e.target.value }))
             }
           />
+          <Button>
+            <SearchIcon />
+          </Button>
         </Box>
       </Box>
 
@@ -187,35 +189,32 @@ const FAQList = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center">
-                <Checkbox />
-              </TableCell>
-              {['NO', '작성자', '카테고리', '제목', '게시일', '노출상태'].map(
-                (column, index) => (
-                  <TableCell key={index} align="center">
-                    {column}
-                  </TableCell>
-                )
-              )}
+              <TableCell></TableCell>
+              <TableCell>NO</TableCell>
+              <TableCell>작성자</TableCell>
+              <TableCell>내용</TableCell>
+              <TableCell>게시일</TableCell>
+              <TableCell>상태</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedFaqs.map((faq) => (
-              <TableRow key={faq.id}>
-                <TableCell align="center">
+              <TableRow
+                key={faq.faq_number}
+                onClick={() => navigate(`/dashboard/inquiry/faq/${faq.faq_number}`)} // 경로 수정
+                style={{ cursor: 'pointer' }}
+              >
+                <TableCell>
                   <Checkbox
-                    checked={selectedFaqs.includes(faq.id)}
-                    onChange={() => handleCheckboxChange(faq.id)}
+                    checked={selectedFaqs.includes(faq.faq_number)}
+                    onChange={() => handleCheckboxChange(faq.faq_number)}
                   />
                 </TableCell>
-                <TableCell align="center">{faq.id}</TableCell>
-                <TableCell align="center">{faq.author}</TableCell>
-                <TableCell align="center">{faq.category}</TableCell>
-                <TableCell align="center">{faq.title}</TableCell>
-                <TableCell align="center">
-                  {new Date(faq.date).toLocaleDateString()}
-                </TableCell>
-                <TableCell align="center">{faq.status}</TableCell>
+                <TableCell>{faq.faq_number}</TableCell>
+                <TableCell>{faq.admin_number}</TableCell>
+                <TableCell>{faq.content}</TableCell>
+                <TableCell>{faq.created_at}</TableCell>
+                <TableCell>{faq.state}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -235,4 +234,4 @@ const FAQList = () => {
   );
 };
 
-export default FAQList;
+export default FAQ;
