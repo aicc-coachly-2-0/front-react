@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/auth';
+const BASE_URL = 'http://localhost:4001/auth';
 
 // 비밀번호 재설정
 export const resetPassword = createAsyncThunk(

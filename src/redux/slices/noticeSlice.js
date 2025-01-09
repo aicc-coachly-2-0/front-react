@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/notice';
+const BASE_URL = 'http://localhost:4001/notice';
 
 // 공지사항 리스트 가져오기
 export const fetchNotices = createAsyncThunk(
