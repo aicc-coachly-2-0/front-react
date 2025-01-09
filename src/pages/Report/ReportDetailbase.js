@@ -6,6 +6,7 @@ import { fetchDetailReport, processReport, fetchProcessedReport } from '../../re
 
 // ReportDetail 컴포넌트: 신고 상세 정보와 처리 정보를 표시하고, 처리 결과를 저장하는 컴포넌트
 const ReportDetail = ({ title, fields, domain, NO  }) => {
+  console.log("타이틀",title,"필드", fields,"도메인", domain,"넘버", NO)
   const theme = useTheme(); // 테마 가져오기
   const dispatch = useDispatch(); // Redux 디스패치 함수
   const navigate = useNavigate(); // 라우팅을 위한 navigate 함수
@@ -80,7 +81,7 @@ const ReportDetail = ({ title, fields, domain, NO  }) => {
             <Grid item xs={12} sm={6} key={index}>
               <TextField
                 label={field.label}
-                defaultValue={selectedReport?.[field.value]} // selectedReport에서 데이터 추출
+                value={field.value} // selectedReport에서 데이터 추출
                 InputProps={{ readOnly: field.readOnly }} // 읽기 전용 설정
                 fullWidth
                 size="small"
@@ -110,7 +111,7 @@ const ReportDetail = ({ title, fields, domain, NO  }) => {
               <Grid item xs={12} sm={6} key={index}>
                 <TextField
                   label={field.label}
-                  defaultValue={selectedReport?.[field.value]} // selectedReport에서 데이터 추출
+                  value={field.value} // selectedReport에서 데이터 추출
                   InputProps={{ readOnly: field.readOnly }} // 읽기 전용 설정
                   fullWidth
                   size="small"
@@ -139,7 +140,7 @@ const ReportDetail = ({ title, fields, domain, NO  }) => {
             <Grid item xs={12} sm={6} key={index}>
               {field.type === 'select' ? (
                 // 처리 결과가 select인 경우 Select 컴포넌트로 처리
-                <Select defaultValue={field.value} fullWidth size="small">
+                <Select value={field.value} fullWidth size="small">
                   {field.options.map((option, i) => (
                     <MenuItem value={option} key={i}>
                       {option}
@@ -150,7 +151,7 @@ const ReportDetail = ({ title, fields, domain, NO  }) => {
                 // 그 외의 경우 TextField로 처리
                 <TextField
                   label={field.label}
-                  defaultValue={field.value}
+                  value={field.value}
                   InputProps={{ readOnly: field.readOnly }} // 읽기 전용 설정
                   fullWidth
                   size="small"
