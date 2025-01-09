@@ -18,19 +18,18 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUsers } from '../../redux/slices/userSlice'; // Redux Slice 연결
+import { fetchUsers } from '../../redux/slices/userSlice';
 
 const UserManagement = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Redux 상태 가져오기
-  const usersFromRedux = useSelector((state) => state.users?.items || []); // Redux에서 가져온 users
-  const status = useSelector((state) => state.users?.status || 'idle');
-  const error = useSelector((state) => state.users?.error);
+  const usersFromRedux = useSelector((state) => state.user?.items || []);
+  const { status, error } = useSelector(
+    (state) => state.user || { status: 'idle', error: null }
+  );
 
-  const [users, setUsers] = useState([]); // 주어진 데이터를 가공한 로컬 상태
-  const itemsPerPage = 10; // 페이지당 표시할 아이템 수
+  const [users, setUsers] = useState([]);
   const [filters, setFilters] = useState({
     activityState: 'all',
     status: 'all',
@@ -39,31 +38,28 @@ const UserManagement = () => {
     sortDirection: 'asc',
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  // 주어진 데이터를 Redux와 연결된 로직으로 변환
   useEffect(() => {
-    // Redux에서 데이터를 가져오는 비동기 호출
     dispatch(fetchUsers())
       .unwrap()
       .then((data) => {
-        // 주어진 유저 데이터 구조를 변환
         const transformedData = data.map((user) => ({
-          user_number: user.user_number, // Redux에서 사용하는 ID 구조에 맞춤
+          user_number: user.user_number,
           name: user.user_name,
           email: user.user_email,
           contact: user.user_phone,
           joinDate: new Date(user.created_at).toLocaleDateString(),
-          lastActivity: user.created_at, // 예제에서는 생성일을 사용
-          reportCount: 0, // 초기화
+          lastActivity: user.created_at,
+          reportCount: 0,
           status: user.status === 'active' ? '정상' : '정지',
-          activityState: '활동', // 기본 값 설정
+          activityState: '활동',
         }));
-        setUsers(transformedData); // 로컬 상태로 설정
+        setUsers(transformedData);
       })
       .catch((err) => console.error('API 호출 실패:', err));
   }, [dispatch]);
 
-  // 필터링 및 정렬된 데이터 계산
   const filteredUsers = users
     .filter((user) =>
       user.name.toLowerCase().includes(filters.search.toLowerCase())
@@ -84,45 +80,39 @@ const UserManagement = () => {
       return 0;
     });
 
-  // 현재 페이지에 표시할 데이터 계산
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // 검색 핸들러
   const handleSearchChange = (e) => {
     setFilters((prevFilters) => ({ ...prevFilters, search: e.target.value }));
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    setCurrentPage(1);
   };
 
-  // 필터 핸들러
   const handleActivityStateChange = (value) => {
     setFilters((prevFilters) => ({ ...prevFilters, activityState: value }));
-    setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
+    setCurrentPage(1);
   };
 
   const handleStatusChange = (value) => {
     setFilters((prevFilters) => ({ ...prevFilters, status: value }));
-    setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
+    setCurrentPage(1);
   };
 
-  // 정렬 핸들러
   const handleSortChange = (key) => {
     const direction =
       filters.sortKey === key && filters.sortDirection === 'asc'
         ? 'desc'
         : 'asc';
-
     setFilters((prevFilters) => ({
       ...prevFilters,
       sortKey: key,
       sortDirection: direction,
     }));
-    setCurrentPage(1); // 정렬 변경 시 첫 페이지로 이동
+    setCurrentPage(1);
   };
 
-  // 페이지 변경 핸들러
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -137,6 +127,10 @@ const UserManagement = () => {
 
   if (status === 'failed') {
     return <Typography color="error">에러: {error}</Typography>;
+  }
+
+  if (!usersFromRedux || usersFromRedux.length === 0) {
+    return <Typography>유저 데이터가 없습니다.</Typography>;
   }
 
   return (
@@ -157,7 +151,6 @@ const UserManagement = () => {
         </Typography>
       </Box>
 
-      {/* 검색 및 정렬 */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -206,7 +199,6 @@ const UserManagement = () => {
         </Box>
       </Box>
 
-      {/* 테이블 */}
       <TableContainer>
         <Table>
           <TableHead>
@@ -245,7 +237,6 @@ const UserManagement = () => {
         </Table>
       </TableContainer>
 
-      {/* 페이지네이션 */}
       <Box mt={2} display="flex" justifyContent="center">
         <Pagination
           count={Math.ceil(filteredUsers.length / itemsPerPage)}

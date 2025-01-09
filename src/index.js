@@ -24,12 +24,17 @@ import FAQDetail from './pages/Inquiry/FAQ/FAQDetail';
 import QNAList from './pages/Inquiry/QNA/QNAList';
 import QNADetail from './pages/Inquiry/QNA/QNADetail';
 // 신고
-import { ReportFeedCommentList, ReportUserList, ReportPostList, ReportMissionAuthList, ReportMissionRoomList, ReportFeedList, ReportPostCommentList,
+import {
+  ReportFeedCommentList,
+  ReportUserList,
+  ReportPostList,
+  ReportMissionAuthList,
+  ReportMissionRoomList,
+  ReportFeedList,
+  ReportPostCommentList,
 } from './pages/Report/ReportList';
 import ReportDetailContent from './pages/Report/ReportDetailcontent';
 import ReportDetail from './pages/Report/ReportDetailbase';
-
-
 
 const router = createBrowserRouter([
   {
@@ -43,7 +48,10 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       // 유저관리 페이지
       { path: 'UserManagement', element: <UserManagement /> },
-      { path: 'UserManagement/:id', element: <UserDetailManagement /> },
+      {
+        path: 'UserManagement/:user_number',
+        element: <UserDetailManagement />,
+      },
       // 공지 페이지
       { path: 'notice', element: <Notice /> },
       {
@@ -65,12 +73,14 @@ const router = createBrowserRouter([
       { path: 'reports/feed_comments', element: <ReportFeedCommentList /> },
       { path: 'reports/users', element: <ReportUserList /> },
       { path: 'reports/posts', element: <ReportPostList /> },
-      { path: 'reports/mission_validations', element: <ReportMissionAuthList /> },
+      {
+        path: 'reports/mission_validations',
+        element: <ReportMissionAuthList />,
+      },
       { path: 'reports/missions', element: <ReportMissionRoomList /> },
       { path: 'reports/feeds', element: <ReportFeedList /> },
       { path: 'reports/:domain/:NO', element: <ReportDetailContent /> },
       { path: 'reports/:domain/:NO', element: <ReportDetail /> },
-
     ],
   },
   {

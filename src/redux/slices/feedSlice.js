@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const BASE_URL = '/feeds';
+const BASE_URL = 'http://localhost:8000/feeds';
 
 export const fetchFeeds = createAsyncThunk('feeds/fetchFeeds', async () => {
   const response = await axios.get(`${BASE_URL}`);

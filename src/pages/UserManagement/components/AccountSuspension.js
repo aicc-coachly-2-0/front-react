@@ -11,10 +11,10 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useTheme } from '@mui/material/styles';
 
 export const AccountSuspension = ({ reports }) => {
-  const theme = useTheme(); // 다크모드 확인을 위한 theme 사용
+  const theme = useTheme();
 
   const [reportList, setReportList] = useState(
-    reports.sort((a, b) => new Date(b.date) - new Date(a.date)) // 초기 정렬
+    reports.sort((a, b) => new Date(b.date) - new Date(a.date))
   );
   const [suspensionReasons, setSuspensionReasons] = useState([]);
 
@@ -24,7 +24,7 @@ export const AccountSuspension = ({ reports }) => {
     const updatedSuspensionReasons = [...suspensionReasons, selectedReport];
 
     setReportList(
-      updatedReportList.sort((a, b) => new Date(b.date) - new Date(a.date)) // 정렬 적용
+      updatedReportList.sort((a, b) => new Date(b.date) - new Date(a.date))
     );
     setSuspensionReasons(
       updatedSuspensionReasons.sort(
@@ -56,7 +56,6 @@ export const AccountSuspension = ({ reports }) => {
         계정 정지 관리
       </Typography>
       <Box display="flex" gap={3}>
-        {/* Left Section: 신고 접수 내역 */}
         <Box
           flex={1}
           border="1px solid #e0e0e0"
@@ -84,6 +83,7 @@ export const AccountSuspension = ({ reports }) => {
               <IconButton
                 size="small"
                 onClick={() => handleMoveToSuspension(index)}
+                aria-label="Move to suspension"
               >
                 <ArrowForwardIosIcon fontSize="small" />
               </IconButton>
@@ -91,7 +91,6 @@ export const AccountSuspension = ({ reports }) => {
           ))}
         </Box>
 
-        {/* Center Section: 정지 사유 등록 */}
         <Box
           flex={1}
           border="1px solid #e0e0e0"
@@ -133,7 +132,6 @@ export const AccountSuspension = ({ reports }) => {
           ))}
         </Box>
 
-        {/* Right Section */}
         <Box
           flex={1}
           display="flex"
