@@ -39,38 +39,24 @@ const NoticeAdd = () => {
   };
 
   const handleSave = async () => {
-    const { title, content, photos } = formData;
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('content', formData.content);
+    data.append('admin_id', adminId);
+    data.append('admin_number', adminNumber);
+    data.append('imageType', 'notice');
 
-    if (!title || !content) {
-      alert('제목과 내용을 입력해주세요.');
-      return;
+    // 파일 추가
+    formData.photos.forEach((photo) => {
+      data.append('noticePicture', photo);
+    });
+
+    // FormData에 어떤 데이터가 들어갔는지 확인
+    for (let [key, value] of data.entries()) {
+      console.log(`${key}:`, value);
     }
 
-    const data = new FormData();
-    data.append('title', title);
-    data.append('content', content);
-    data.append('admin_id', adminId); // 관리자 ID 추가
-    data.append('admin_number', adminNumber); // 관리자 Number 추가
-    data.append('imageType', 'notice'); // 이미지 타입 추가
-    console.log(data);
-    // 'noticePicture' 필드로 파일 추가
-    photos.forEach((file) => data.append('noticePicture', file));
-
-    setIsSubmitting(true);
-    console.log(data);
-    dispatch(addNotice(data)).then((result) => {
-      setIsSubmitting(false);
-      console.log(data);
-      if (addNotice.fulfilled.match(result)) {
-        alert('공지 추가 완료');
-        navigate('/dashboard/notice');
-      } else {
-        alert(
-          '공지 추가 실패: ' +
-            (result.payload?.message || '알 수 없는 오류가 발생했습니다.')
-        );
-      }
-    });
+    dispatch(addNotice(data));
   };
 
   return (

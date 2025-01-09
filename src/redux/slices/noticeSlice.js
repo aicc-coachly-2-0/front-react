@@ -26,11 +26,7 @@ export const addNotice = createAsyncThunk(
   'notices/addNotice',
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/notices`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(`${BASE_URL}/notices`, noticeData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data || error.message);
