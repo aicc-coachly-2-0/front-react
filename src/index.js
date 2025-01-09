@@ -26,6 +26,7 @@ import QNADetail from './pages/Inquiry/QNA/QNADetail';
 // 신고
 import { ReportFeedCommentList, ReportUserList, ReportPostList, ReportMissionAuthList, ReportMissionRoomList, ReportFeedList, ReportPostCommentList,
 } from './pages/Report/ReportList';
+import ReportDetailContent from './pages/Report/ReportDetailcontent';
 import ReportDetail from './pages/Report/ReportDetailbase';
 
 
@@ -67,7 +68,9 @@ const router = createBrowserRouter([
       { path: 'reports/mission_validations', element: <ReportMissionAuthList /> },
       { path: 'reports/missions', element: <ReportMissionRoomList /> },
       { path: 'reports/feeds', element: <ReportFeedList /> },
+      { path: 'reports/:domain/:NO', element: <ReportDetailContent /> },
       { path: 'reports/:domain/:NO', element: <ReportDetail /> },
+
     ],
   },
   {

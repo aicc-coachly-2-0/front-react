@@ -1,21 +1,23 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
-import ReportDetail from './ReportDetail';
+import ReportDetail from './ReportDetailbase';
 
 // ReportDetailContent 컴포넌트는 도메인에 맞는 신고 정보를 표시하는 역할
 const ReportDetailContent = () => {
   const { domain, NO } = useParams(); // URL에서 domain과 NO 추출
+  
   // 도메인에 맞는 필드를 반환하는 함수
-  const getFields = () => {
+  const getFields = (domain, reportData) => {
     const fields = {
       // 각 도메인별 신고 필드를 정의
-      Comment: {
+      feed_comments: {
         general: [
-          { label: '접수 번호', value: '12345', readOnly: true },
+          { label: '접수 번호', value: 'reportData.feed_comment_report_number', readOnly: true },
           { label: '신고 분류', value: '댓글', readOnly: true },
-          { label: '신고자(아이디)', value: 'user123', readOnly: true },
-          { label: '처리 상태', value: '처리 중', readOnly: false },
+          { label: '신고자(아이디)', value: 'reportData.user_id', readOnly: true },
+          { label: '처리 상태', value: 'reportData.state', readOnly: false },
+          { label: '신고사유', value: 'reportData.report_reason', readOnly: true },
         ],
         additional: [
           { label: '댓글 내용', value: '이 댓글은 문제가 있습니다.', readOnly: true },
@@ -24,12 +26,28 @@ const ReportDetailContent = () => {
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '삭제', '경고'] },
         ],
       },
-      Post: {
+      post_comments: {
+        general: [
+          { label: '접수 번호', value: '12345', readOnly: true },
+          { label: '신고 분류', value: '댓글', readOnly: true },
+          { label: '신고자(아이디)', value: 'user123', readOnly: true },
+          { label: '처리 상태', value: '처리 중', readOnly: false },
+          { label: '신고사유', value: '사칭입니다', readOnly: true },
+        ],
+        additional: [
+          { label: '댓글 내용', value: '이 댓글은 문제가 있습니다.', readOnly: true },
+        ],
+        processing: [
+          { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '삭제', '경고'] },
+        ],
+      },
+      posts: {
         general: [
           { label: '접수 번호', value: '23456', readOnly: true },
           { label: '신고 분류', value: '게시글', readOnly: true },
           { label: '신고자(아이디)', value: 'user234', readOnly: true },
           { label: '처리 상태', value: '처리 중', readOnly: false },
+          { label: '신고사유', value: '사칭입니다', readOnly: true },
         ],
         additional: [
           { label: '게시글 제목', value: '문제 있는 게시글', readOnly: true },
@@ -38,12 +56,13 @@ const ReportDetailContent = () => {
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '삭제', '경고'] },
         ],
       },
-      MissionAuth: {
+      mission_validations: {
         general: [
           { label: '접수 번호', value: '34567', readOnly: true },
           { label: '신고 분류', value: '미션 인증', readOnly: true },
           { label: '신고자(아이디)', value: 'user345', readOnly: true },
           { label: '처리 상태', value: '처리 중', readOnly: false },
+          { label: '신고사유', value: '사칭입니다', readOnly: true },
         ],
         additional: [
           { label: '미션명 제목', value: '문제 있는 미션 제목', readOnly: true },
@@ -52,12 +71,13 @@ const ReportDetailContent = () => {
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '인증 삭제', '인증 성공'] },
         ],
       },
-      MissionRoom: {
+      missions: {
         general: [
           { label: '접수 번호', value: '45678', readOnly: true },
           { label: '신고 분류', value: '미션방', readOnly: true },
           { label: '신고자(아이디)', value: 'user456', readOnly: true },
           { label: '처리 상태', value: '처리 중', readOnly: false },
+          { label: '신고사유', value: '사칭입니다', readOnly: true },
         ],
         additional: [
           { label: '미션방 제목', value: '문제 있는 미션방 제목', readOnly: true },
@@ -66,12 +86,13 @@ const ReportDetailContent = () => {
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '미션방 삭제'] },
         ],
       },
-      Feed: {
+      feeds: {
         general: [
           { label: '접수 번호', value: '56789', readOnly: true },
           { label: '신고 분류', value: '피드', readOnly: true },
           { label: '신고자(아이디)', value: 'user567', readOnly: true },
           { label: '처리 상태', value: '처리 중', readOnly: false },
+          { label: '신고사유', value: '사칭입니다', readOnly: true },
         ],
         additional: [
           { label: '피드 내용', value: '문제 있는 피드 내용', readOnly: true },
@@ -80,12 +101,13 @@ const ReportDetailContent = () => {
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '피드 삭제', '계정 정지'] },
         ],
       },
-      User: {
+      users: {
         general: [
           { label: '접수 번호', value: '67890', readOnly: true },
           { label: '신고 분류', value: '유저', readOnly: true },
           { label: '신고자(아이디)', value: 'user678', readOnly: true },
           { label: '처리 상태', value: '처리 중', readOnly: false },
+          { label: '신고사유', value: '사칭입니다', readOnly: true },
         ],
         processing: [
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '경고', '정지'] },
@@ -93,13 +115,13 @@ const ReportDetailContent = () => {
       },
     };
     console.log('ReportDetail 컴포넌트가 렌더링되었습니다.');
-    console.log('전달된 필드:', fields);
-    
-    return fields[domain] || {}; // 주어진 domain에 해당하는 필드를 반환, 없으면 빈 객체 반환
+    return fields[domain] 
   };
 
   // domain에 해당하는 필드 정보 가져오기
   const fields = getFields(domain);
+  console.log('전달된 필드:', fields);
+  console.log('전달된 도메인:', domain);
 
   // 필드 정보가 없으면 사용자에게 해당 도메인의 신고 정보가 없음을 표시
   if (!fields || Object.keys(fields).length === 0) {

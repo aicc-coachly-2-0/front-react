@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 import { Box, Typography, TextField, Button, Select, MenuItem, Grid, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchDetailReport, processReport, fetchProcessedReport } from '../../redux/slices/reportSlice'; 
 
 // ReportDetail 컴포넌트: 신고 상세 정보와 처리 정보를 표시하고, 처리 결과를 저장하는 컴포넌트
-const ReportDetail = ({ title, fields }) => {
+const ReportDetail = ({ title, fields, domain, NO  }) => {
   const theme = useTheme(); // 테마 가져오기
   const dispatch = useDispatch(); // Redux 디스패치 함수
   const navigate = useNavigate(); // 라우팅을 위한 navigate 함수
-
-  // URL 쿼리 파라미터에서 domain과 NO를 추출
-  const { domain, NO } = useParams(); // URL에서 domain과 NO를 추출
-
   // 상태 및 로딩, 에러 처리
   const { status, error, selectedReport } = useSelector((state) => state.reports);
 
