@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import SignIn from './pages/signIn/SignIn';
 
-// app이라고 생각하자 바꿔도 된다. app으로
 import App from './App';
 import store from './redux/store'; // Redux 스토어를 import
 // 대시보드
@@ -25,16 +24,11 @@ import FAQDetail from './pages/Inquiry/FAQ/FAQDetail';
 import QNAList from './pages/Inquiry/QNA/QNAList';
 import QNADetail from './pages/Inquiry/QNA/QNADetail';
 // 신고
-import {
-  ReportFeedCommentList,
-  ReportUserList,
-  ReportPostList,
-  ReportMissionAuthList,
-  ReportMissionRoomList,
-  ReportFeedList,
-  ReportPostCommentList,
+import { ReportFeedCommentList, ReportUserList, ReportPostList, ReportMissionAuthList, ReportMissionRoomList, ReportFeedList, ReportPostCommentList,
 } from './pages/Report/ReportList';
-import ReportDetails from './pages/Report/ReportDetails';
+import ReportDetail from './pages/Report/ReportDetailbase';
+
+
 
 const router = createBrowserRouter([
   {
@@ -73,18 +67,7 @@ const router = createBrowserRouter([
       { path: 'reports/mission_validations', element: <ReportMissionAuthList /> },
       { path: 'reports/missions', element: <ReportMissionRoomList /> },
       { path: 'reports/feeds', element: <ReportFeedList /> },
-      { path: 'reports/comments/:id', element: <ReportDetails.Comment /> },
-      { path: 'reports/users/:id', element: <ReportDetails.User /> },
-      { path: 'reports/posts/:id', element: <ReportDetails.Post /> },
-      {
-        path: 'reports/mission_validations/:id',
-        element: <ReportDetails.MissionAuth />,
-      },
-      {
-        path: 'reports/missions/:id',
-        element: <ReportDetails.MissionRoom />,
-      },
-      { path: 'reports/feeds/:id', element: <ReportDetails.Feed /> },
+      { path: 'reports/:domain/:NO', element: <ReportDetail /> },
     ],
   },
   {

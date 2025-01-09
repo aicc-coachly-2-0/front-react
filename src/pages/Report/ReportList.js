@@ -84,6 +84,8 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
 
   // 리포트 상태 가져오기
   const reports = useSelector((state) => state.reports.items || []);
+  console.log('reports state:', useSelector((state) => state.reports));
+
   const loading = useSelector((state) => state.reports.status === 'loading');
 
   const [filters, setFilters] = useState({
@@ -102,6 +104,7 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
 
   // 필터링 및 정렬된 데이터 계산
   const filteredData = useMemo(() => {
+    if (!Array.isArray(reports)) return []; // reports가 배열이 아니면 빈 배열 반환
     let filtered = [...reports];
 
     // 검색어 필터 적용
@@ -130,8 +133,8 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
     currentPage * itemsPerPage
   );
 
-  const handleRowClick = (index) => {
-    navigate(`${detailPath}/${index}`);
+  const handleRowClick = (index, domain) => {
+    navigate(`/dashboard/reports/${domain}s/${index}`);  
   };
 
   const handlePageChange = (event, value) => {
@@ -202,12 +205,14 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
                 </TableCell>
               </TableRow>
             ) : (
-              mappedData.map((row, rowIndex) => (
+              mappedData.map((row) => (
                 <TableRow
-                  key={rowIndex}
-                  onClick={() => handleRowClick(row.feed_report_number)}
+                  key={row.NO}
+                  onClick={() => {
+                    handleRowClick(row.NO, domain)}  // 도메인과 ID 전달
+                    }
                   sx={{ cursor: 'pointer' }}
-                >
+              >
                   <TableCell align="center">
                     <Checkbox />
                   </TableCell>

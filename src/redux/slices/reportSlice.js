@@ -22,8 +22,9 @@ const handleRejected = (state, action) => {
 // 도메인별 신고 상세 조회 
 export const fetchDetailReport = createAsyncThunk(
   'reports/fetchDetailReport',
-  async ({ domain, reportNumber }) => {
-    const response = await axios.get(`${BASE_URL}/report/${domain}/${reportNumber}`);
+  async ({ domain, NO }) => {
+    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const response = await axios.get(`${BASE_URL}/report/${cleanedDomain}/${NO}`);
     return response.data;
   }
 );
@@ -66,11 +67,23 @@ export const fetchMyReported = createAsyncThunk(
 // 신고 처리 생성
 export const processReport = createAsyncThunk(
   'reports/processReport',
-  async ({ domain, reportNumber, processData }) => {
-    const response = await axios.put(`${BASE_URL}/process/${domain}/${reportNumber}`, processData );
+  async ({ domain, NO, processData }) => {
+    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const response = await axios.put(`${BASE_URL}/process/${cleanedDomain}/${NO}`, processData);
     return response.data;
   }
 );
+
+// 신고 처리 조회 
+export const fetchProcessedReport = createAsyncThunk(
+  'reports/fetchProcessedReport',
+  async ({ domain, NO }) => {
+    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const response = await axios.get(`${BASE_URL}/process/${cleanedDomain}/${NO}`);
+    return response.data;
+  }
+);
+
 
 const reportSlice = createSlice({
   name: 'reports',
@@ -96,6 +109,7 @@ const reportSlice = createSlice({
       .addCase(fetchMyReporting.pending, handlePending)
       .addCase(fetchMyReported.pending, handlePending)
       .addCase(processReport.pending, handlePending)
+      .addCase(fetchProcessedReport.pending, handlePending) 
 
       // 성공 처리
       .addCase(fetchDetailReport.fulfilled, handleFulfilled)
@@ -111,6 +125,10 @@ const reportSlice = createSlice({
         state.status = 'succeeded';
         state.items = action.payload;
       })
+      .addCase(fetchProcessedReport.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.selectedReport = action.payload; 
+      })
 
       // 실패 처리
       .addCase(fetchDetailReport.rejected, handleRejected)
@@ -118,6 +136,7 @@ const reportSlice = createSlice({
       .addCase(fetchMyReporting.rejected, handleRejected)
       .addCase(fetchMyReported.rejected, handleRejected)
       .addCase(processReport.rejected, handleRejected)
+      .addCase(fetchProcessedReport.rejected, handleRejected)
 
       // 신고 처리 후 업데이트
       .addCase(processReport.fulfilled, (state, action) => {
