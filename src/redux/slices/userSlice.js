@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const BASE_URL = '/user';
+const BASE_URL = 'http://localhost:8000/user';
 
 // 유저 목록 조회
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {

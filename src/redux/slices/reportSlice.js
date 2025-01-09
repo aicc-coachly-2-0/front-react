@@ -19,29 +19,36 @@ const handleRejected = (state, action) => {
   state.error = action.error.message;
 };
 
-// 도메인별 신고 상세 조회 
+// 도메인별 신고 상세 조회
 export const fetchDetailReport = createAsyncThunk(
   'reports/fetchDetailReport',
   async ({ domain, NO }) => {
     const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
-    const response = await axios.get(`${BASE_URL}/report/${cleanedDomain}/${NO}`);
+    const response = await axios.get(
+      `${BASE_URL}/report/${cleanedDomain}/${NO}`
+    );
     return response.data;
   }
 );
 
-// 도메인별 전체 신고 조회 
+// 도메인별 전체 신고 조회
 export const fetchReport = createAsyncThunk(
   'reports/fetchReport',
   async ({ domain }) => {
-    const response = await axios.get(`${BASE_URL}/report/${domain}`);
-    return response.data; 
+    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const response = await axios.get(`${BASE_URL}/report/${cleanedDomain}`);
+    return response.data;
   }
 );
-// 도메인별 신고 접수 
+// 도메인별 신고 접수
 export const createReport = createAsyncThunk(
   'reports/createReport',
   async ({ domain, reportData }) => {
-    const response = await axios.post(`${BASE_URL}/report/${domain}`, reportData);
+    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const response = await axios.post(
+      `${BASE_URL}/report/${cleanedDomain}`,
+      reportData
+    );
     return response.data;
   }
 );
@@ -59,7 +66,10 @@ export const fetchMyReporting = createAsyncThunk(
 export const fetchMyReported = createAsyncThunk(
   'reports/fetchMyReported',
   async ({ user_number, domain }) => {
-    const response = await axios.get(`${BASE_URL}/user/${user_number}?domain=${domain}`);
+    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const response = await axios.get(
+      `${BASE_URL}/user/${user_number}?domain=${cleanedDomain}`
+    );
     return response.data;
   }
 );
@@ -69,21 +79,25 @@ export const processReport = createAsyncThunk(
   'reports/processReport',
   async ({ domain, NO, processData }) => {
     const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
-    const response = await axios.put(`${BASE_URL}/process/${cleanedDomain}/${NO}`, processData);
+    const response = await axios.put(
+      `${BASE_URL}/process/${cleanedDomain}/${NO}`,
+      processData
+    );
     return response.data;
   }
 );
 
-// 신고 처리 조회 
+// 신고 처리 조회
 export const fetchProcessedReport = createAsyncThunk(
   'reports/fetchProcessedReport',
   async ({ domain, NO }) => {
     const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
-    const response = await axios.get(`${BASE_URL}/process/${cleanedDomain}/${NO}`);
+    const response = await axios.get(
+      `${BASE_URL}/process/${cleanedDomain}/${NO}`
+    );
     return response.data;
   }
 );
-
 
 const reportSlice = createSlice({
   name: 'reports',
@@ -109,7 +123,7 @@ const reportSlice = createSlice({
       .addCase(fetchMyReporting.pending, handlePending)
       .addCase(fetchMyReported.pending, handlePending)
       .addCase(processReport.pending, handlePending)
-      .addCase(fetchProcessedReport.pending, handlePending) 
+      .addCase(fetchProcessedReport.pending, handlePending)
 
       // 성공 처리
       .addCase(fetchDetailReport.fulfilled, handleFulfilled)
@@ -127,7 +141,7 @@ const reportSlice = createSlice({
       })
       .addCase(fetchProcessedReport.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.selectedReport = action.payload; 
+        state.selectedReport = action.payload;
       })
 
       // 실패 처리
@@ -141,8 +155,10 @@ const reportSlice = createSlice({
       // 신고 처리 후 업데이트
       .addCase(processReport.fulfilled, (state, action) => {
         // 처리 후 받은 데이터로 상태 업데이트
-        state.items = state.items.map(report =>
-          report.report_number === action.payload.report_number ? action.payload : report
+        state.items = state.items.map((report) =>
+          report.report_number === action.payload.report_number
+            ? action.payload
+            : report
         );
       });
   },

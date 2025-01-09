@@ -25,12 +25,11 @@ export const UserHistory = ({ userNumber }) => {
   const itemsPerPage = 5; // 페이지당 표시할 아이템 수
 
   const headers = {
-    payment: ['NO', '서비스명', '금액', '서비스 결제일', '구독 상태'],
-    mission: ['NO', '미션명', '완료일', '상태'],
-    community: ['NO', '게시글 제목', '작성일', '댓글 수'],
-    feed: ['NO', '피드 제목', '업로드 날짜', '조회수'],
-    inquiry: ['NO', '문의 제목', '문의 날짜', '처리 상태'],
-    report: ['NO', '신고 내용', '신고 날짜', '처리 상태'],
+    payment: ['NO', '결제 ID', '결제 날짜', '금액', '결제 상태'],
+    mission: ['NO', '미션 ID', '미션 이름', '참여 날짜', '상태'],
+    community: ['NO', '게시글 ID', '게시글 제목', '작성일', '댓글 수'],
+    feed: ['NO', '피드 ID', '피드 제목', '작성일', '조회수'],
+    report: ['NO', '신고 ID', '신고 내용', '신고 날짜', '처리 상태'],
   };
 
   const fetchData = useCallback(async () => {
@@ -38,25 +37,30 @@ export const UserHistory = ({ userNumber }) => {
     setError(null);
 
     const endpoints = {
-      payment: '/api/paymentHistory',
-      mission: '/api/missionHistory',
-      community: '/api/communityHistory',
-      feed: '/api/feedHistory',
-      inquiry: '/api/inquiryHistory',
-      report: '/api/reportHistory',
+      payment: `/user/${userNumber}`, // 유저 데이터에서 결제 정보 가공
+      mission: `/missions`, // 미션 참여 데이터를 클라이언트에서 처리
+      community: `/posts/users/${userNumber}`, // 특정 유저의 게시글
+      feed: `/feeds/users/${userNumber}`, // 특정 유저의 피드
+      report: `/reports/my_reports/${userNumber}`, // 신고 내역
     };
 
-    const url = `${endpoints[activeHistory]}/${userNumber}`;
-
     try {
+      const url = endpoints[activeHistory];
       const response = await axios.get(url, {
         params: {
           page: currentPage,
           limit: itemsPerPage,
         },
       });
-      setData(response.data.items); // 서버에서 가져온 데이터
-      setTotalPages(response.data.totalPages); // 총 페이지 수 설정
+
+      // 데이터 형식 가공
+      const fetchedData =
+        activeHistory === 'payment'
+          ? response.data.paymentHistory || [] // 결제 데이터는 가공 필요
+          : response.data.items || response.data; // 일반 데이터
+
+      setData(fetchedData);
+      setTotalPages(response.data.totalPages || 1); // 페이지 수 처리
     } catch (err) {
       setError(err.message || '데이터를 불러오는데 실패했습니다.');
     } finally {
@@ -99,8 +103,6 @@ export const UserHistory = ({ userNumber }) => {
               ? '커뮤니티 내역'
               : key === 'feed'
               ? '피드 내역'
-              : key === 'inquiry'
-              ? '문의 내역'
               : '신고 내역'}
           </Button>
         ))}
@@ -134,8 +136,8 @@ export const UserHistory = ({ userNumber }) => {
                   <TableCell align="center">
                     <Checkbox />
                   </TableCell>
-                  {Object.values(entry).map((value, index) => (
-                    <TableCell key={index} align="center">
+                  {Object.values(entry).map((value, idx) => (
+                    <TableCell key={idx} align="center">
                       {value}
                     </TableCell>
                   ))}

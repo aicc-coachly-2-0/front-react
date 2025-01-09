@@ -18,7 +18,6 @@ export const AccountSuspension = ({ reports }) => {
   );
   const [suspensionReasons, setSuspensionReasons] = useState([]);
 
-  // 신고 접수에서 정지 사유로 이동
   const handleMoveToSuspension = (index) => {
     const selectedReport = reportList[index];
     const updatedReportList = reportList.filter((_, i) => i !== index);
@@ -30,11 +29,10 @@ export const AccountSuspension = ({ reports }) => {
     setSuspensionReasons(
       updatedSuspensionReasons.sort(
         (a, b) => new Date(b.date) - new Date(a.date)
-      ) // 정렬 적용
+      )
     );
   };
 
-  // 정지 사유에서 제거
   const handleRemoveFromSuspension = (index) => {
     const removedReport = suspensionReasons[index];
     const updatedSuspensionReasons = suspensionReasons.filter(
@@ -43,12 +41,12 @@ export const AccountSuspension = ({ reports }) => {
     const updatedReportList = [...reportList, removedReport];
 
     setReportList(
-      updatedReportList.sort((a, b) => new Date(b.date) - new Date(a.date)) // 정렬 적용
+      updatedReportList.sort((a, b) => new Date(b.date) - new Date(a.date))
     );
     setSuspensionReasons(
       updatedSuspensionReasons.sort(
         (a, b) => new Date(b.date) - new Date(a.date)
-      ) // 정렬 적용
+      )
     );
   };
 
