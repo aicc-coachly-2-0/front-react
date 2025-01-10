@@ -8,17 +8,17 @@ import { fetchDetailReport, processReport, fetchProcessedReport } from '../../re
 // ReportDetailContent 컴포넌트는 도메인에 맞는 신고 정보를 표시하는 역할
 const ReportDetailContent = () => {
   const { domain, NO } = useParams(); // URL에서 domain과 NO 추출
-  console.log("도메인:", domain, "번호:", NO)
   const dispatch = useDispatch(); // Redux 디스패치 함수
 
   const [adminNumber, setAdminNumber] = useState('');
   const [adminId, setAdminId] = useState('');
   const reportData = useSelector((state) => state.reports.selectedReport);
+  const management = reportData.reportManagement;
 
   useEffect(() => {
     if (domain && NO) {
-      dispatch(fetchDetailReport({ domain, NO })); // 신고 상세 정보 가져오기
       dispatch(fetchProcessedReport({ domain, NO })); // 처리된 신고 정보 가져오기
+      dispatch(fetchDetailReport({ domain, NO })); // 신고 상세 정보 가져오기4rt
     }
   }, [dispatch, domain, NO]);
    
@@ -32,9 +32,9 @@ const ReportDetailContent = () => {
   }, []);
   
   // 도메인에 맞는 필드를 반환하는 함수
-  const getFields = (domain, reportData) => {
+  const getFields = (domain, reportData, management) => {
     if (!reportData) return {}; // reportData가 없을 때 빈 객체 반환
-    console.log(reportData)
+    console.log("받아오는 데이터",reportData)
 
     const fields = {
       // 각 도메인별 신고 필드를 정의
@@ -50,6 +50,11 @@ const ReportDetailContent = () => {
           { label: '댓글 내용', value: '댓글 내용입니다 .', readOnly: true },
         ],
         processing: [
+          { label: '신고 처리 번호', value: reportData.report_man_number },
+          { label: '관리자 번호', value: reportData.admin_number },
+          { label: '처리 내용', value: reportData.report_content},
+          { label: '정지일', value: reportData.ban_until },
+          { label: '신고 처리일', value: reportData.resolution_at},
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '삭제', '경고'] },
         ],
       },
@@ -65,6 +70,11 @@ const ReportDetailContent = () => {
           { label: '댓글 내용', value: '이 댓글은 문제가 있습니다.', readOnly: true },
         ],
         processing: [
+          { label: '신고 처리 번호', value: reportData.report_man_number },
+          { label: '관리자 번호', value: reportData.admin_number },
+          { label: '처리 내용', value: reportData.report_content},
+          { label: '정지일', value: reportData.ban_until },
+          { label: '신고 처리일', value: reportData.resolution_at},
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '삭제', '경고'] },
         ],
       },
@@ -80,7 +90,12 @@ const ReportDetailContent = () => {
           { label: '게시글 제목', value: '문제 있는 게시글', readOnly: true },
         ],
         processing: [
-          { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '삭제', '경고'] },
+          { label: '신고 처리 번호', value: reportData.report_man_number },
+          { label: '관리자 번호', value: reportData.admin_number },
+          { label: '처리 내용', value: reportData.report_content},
+          { label: '정지일', value: reportData.ban_until },
+          { label: '신고 처리일', value: reportData.resolution_at},
+          { label: '처리 결과', value: reportData.state, type: 'select', options: ['기각', '삭제'] },
         ],
       },
       mission_validations: {
@@ -90,6 +105,7 @@ const ReportDetailContent = () => {
           { label: '신고자(아이디)', value: 'user345', readOnly: true },
           { label: '처리 상태', value: '처리 중', readOnly: false },
           { label: '신고사유', value: '사칭입니다', readOnly: true },
+          { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '미션방 삭제'] },
         ],
         additional: [
           { label: '미션명 제목', value: '문제 있는 미션 제목', readOnly: true },
@@ -110,6 +126,11 @@ const ReportDetailContent = () => {
           { label: '미션방 제목', value: '문제 있는 미션방 제목', readOnly: true },
         ],
         processing: [
+          { label: '신고 처리 번호', value: reportData.report_man_number },
+          { label: '관리자 번호', value: reportData.admin_number },
+          { label: '처리 내용', value: reportData.report_content},
+          { label: '정지일', value: reportData.ban_until },
+          { label: '신고 처리일', value: reportData.resolution_at},
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '미션방 삭제'] },
         ],
       },
@@ -125,6 +146,11 @@ const ReportDetailContent = () => {
           { label: '피드 내용', value: '문제 있는 피드 내용', readOnly: true },
         ],
         processing: [
+          { label: '신고 처리 번호', value: management.report_man_number },
+          { label: '관리자 번호', value: management.admin_number },
+          { label: '처리 내용', value: management.report_content},
+          { label: '정지일', value: management.ban_until },
+          { label: '신고 처리일', value: management.resolution_at},
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '피드 삭제', '계정 정지'] },
         ],
       },
@@ -137,17 +163,20 @@ const ReportDetailContent = () => {
           { label: '신고사유', value: '사칭입니다', readOnly: true },
         ],
         processing: [
+          { label: '신고 처리 번호', value: reportData.report_man_number },
+          { label: '관리자 번호', value: reportData.admin_number },
+          { label: '처리 내용', value: reportData.report_content},
+          { label: '정지일', value: reportData.ban_until },
+          { label: '신고 처리일', value: reportData.resolution_at},
           { label: '처리 결과', value: '기각', type: 'select', options: ['기각', '경고', '정지'] },
         ],
       },
     };
-    console.log('ReportDetail 컴포넌트가 렌더링되었습니다.');
     return fields[domain] 
   };
 
   // domain에 해당하는 필드 정보 가져오기
-  const fields = getFields(domain, reportData);
-  console.log("필드",fields)
+  const fields = getFields(domain, reportData, management);
 
   // 필드 정보가 없으면 사용자에게 해당 도메인의 신고 정보가 없음을 표시
   if (!fields || Object.keys(fields).length === 0) {
