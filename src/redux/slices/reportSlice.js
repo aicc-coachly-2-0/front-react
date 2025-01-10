@@ -104,6 +104,7 @@ const reportSlice = createSlice({
   initialState: {
     items: [],
     selectedReport: null,
+    reportManagement: null,
     status: 'idle',
     error: null,
   },

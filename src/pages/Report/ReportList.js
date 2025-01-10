@@ -1,5 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Box, Typography, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Select, MenuItem, Pagination } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Checkbox,
+  Select,
+  MenuItem,
+  Pagination,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchReport } from '../../redux/slices/reportSlice';
@@ -8,70 +23,70 @@ import { fetchReport } from '../../redux/slices/reportSlice';
 function mapColumnsData(domain, data) {
   const columnMappings = {
     feed: {
-      'NO': 'feed_report_number',
+      NO: 'feed_report_number',
       '신고자(아이디)': 'user_number',
-      '신고사유': 'report_reason',
-      '신고일': 'report_at',
-      '처리일': 'processed_at',
+      신고사유: 'report_reason',
+      신고일: 'report_at',
+      처리일: 'processed_at',
       '처리 상태': 'state',
     },
     feed_comment: {
-      'NO': 'feed_comment_report_number',
+      NO: 'feed_comment_report_number',
       '신고자(아이디)': 'user_number',
-      '신고사유': 'report_reason',
-      '신고일': 'report_at',
-      '처리일': 'processed_at',
+      신고사유: 'report_reason',
+      신고일: 'report_at',
+      처리일: 'processed_at',
       '처리 상태': 'state',
     },
     post: {
-      'NO': 'post_report_number',
+      NO: 'post_report_number',
       '신고자(아이디)': 'user_number',
-      '신고사유': 'report_reason',
-      '신고일': 'report_at',
-      '처리일': 'processed_at',
+      신고사유: 'report_reason',
+      신고일: 'report_at',
+      처리일: 'processed_at',
       '처리 상태': 'state',
     },
     post_comment: {
-      'NO': 'post_comment_report_number',
+      NO: 'post_comment_report_number',
       '신고자(아이디)': 'user_number',
-      '신고사유': 'report_reason',
-      '신고일': 'report_at',
-      '처리일': 'processed_at',
+      신고사유: 'report_reason',
+      신고일: 'report_at',
+      처리일: 'processed_at',
       '처리 상태': 'state',
     },
     mission: {
-      'NO': 'mission_report_number',
+      NO: 'mission_report_number',
       '신고자(아이디)': 'user_number',
-      '신고사유': 'report_reason',
-      '신고일': 'report_at',
-      '처리일': 'processed_at',
+      신고사유: 'report_reason',
+      신고일: 'report_at',
+      처리일: 'processed_at',
       '처리 상태': 'state',
     },
     mission_validation: {
-      'NO': 'mission_validation_report_number',
+      NO: 'mission_validation_report_number',
       '신고자(아이디)': 'user_number',
-      '신고사유': 'report_reason',
-      '신고일': 'report_at',
-      '처리일': 'processed_at',
+      신고사유: 'report_reason',
+      신고일: 'report_at',
+      처리일: 'processed_at',
       '처리 상태': 'state',
     },
     user: {
-      'NO': 'user_report_number',
+      NO: 'user_report_number',
       '신고자(아이디)': 'user_number',
-      '신고사유': 'report_reason',
-      '신고일': 'report_at',
-      '처리일': 'processed_at',
+      신고사유: 'report_reason',
+      신고일: 'report_at',
+      처리일: 'processed_at',
       '처리 상태': 'state',
     },
   };
 
   const mappings = columnMappings[domain] || {};
-  
+
   // 데이터 매핑: 해당 도메인에 맞는 데이터를 가져와서 변환
-  return data.map(item => {
+  return data.map((item) => {
     let mappedItem = {};
     for (let column in mappings) {
-      mappedItem[column] = item[mappings[column]] || '-';  // 필드가 없으면 '-' 표시
+      mappedItem[column] = item[mappings[column]] || '-'; // 필드가 없으면 '-' 표시
     }
     return mappedItem;
   });
@@ -84,7 +99,7 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
 
   // 리포트 상태 가져오기
   const reports = useSelector((state) => state.reports.items || []);
-  console.log('reports state:', useSelector((state) => state.reports));
+  console.log('reports state:', reports);
 
   const loading = useSelector((state) => state.reports.status === 'loading');
 
@@ -134,7 +149,7 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
   );
 
   const handleRowClick = (index, domain) => {
-    navigate(`/dashboard/reports/${domain}s/${index}`);  
+    navigate(`/dashboard/reports/${domain}s/${index}`);
   };
 
   const handlePageChange = (event, value) => {
@@ -150,13 +165,23 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
 
   return (
     <Box p={3} width="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
-      <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        mb={3}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <Typography variant="h5" fontWeight="bold">
           {title}
         </Typography>
       </Box>
 
-      <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        mb={3}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <Box display="flex" gap={2}>
           <Select
             value={filters.order}
@@ -208,11 +233,13 @@ const ReportList = ({ title, columns, domain, detailPath }) => {
               mappedData.map((row) => (
                 <TableRow
                   key={row.NO}
-                  onClick={() => {
-                    handleRowClick(row.NO, domain)}  // 도메인과 ID 전달
-                    }
+                  onClick={
+                    () => {
+                      handleRowClick(row.NO, domain);
+                    } // 도메인과 ID 전달
+                  }
                   sx={{ cursor: 'pointer' }}
-              >
+                >
                   <TableCell align="center">
                     <Checkbox />
                   </TableCell>
