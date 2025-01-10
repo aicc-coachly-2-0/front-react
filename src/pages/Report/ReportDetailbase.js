@@ -152,7 +152,6 @@ const ReportDetail = ({ title, fields, domain, NO  }) => {
                 <TextField
                   label={field.label}
                   value={field.value}
-                  InputProps={{ readOnly: field.readOnly }} // 읽기 전용 설정
                   fullWidth
                   size="small"
                 />
