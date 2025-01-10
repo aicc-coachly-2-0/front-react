@@ -8,12 +8,6 @@ const handlePending = (state) => {
   state.status = 'loading';
 };
 
-const handleFulfilled = (state, action) => {
-  state.status = 'succeeded';
-  state.items = action.payload; // 전체 데이터
-  state.selectedReport = action.payload; // 선택된 데이터 (필요한 경우)
-};
-
 const handleRejected = (state, action) => {
   state.status = 'failed';
   state.error = action.error.message;
@@ -23,7 +17,10 @@ const handleRejected = (state, action) => {
 export const fetchDetailReport = createAsyncThunk(
   'reports/fetchDetailReport',
   async ({ domain, NO }) => {
-    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const cleanedDomain =
+      typeof domain === 'string' && domain.endsWith('s')
+        ? domain.slice(0, -1)
+        : domain;
     const response = await axios.get(
       `${BASE_URL}/report/${cleanedDomain}/${NO}`
     );
@@ -35,7 +32,10 @@ export const fetchDetailReport = createAsyncThunk(
 export const fetchReport = createAsyncThunk(
   'reports/fetchReport',
   async ({ domain }) => {
-    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const cleanedDomain =
+      typeof domain === 'string' && domain.endsWith('s')
+        ? domain.slice(0, -1)
+        : domain;
     const response = await axios.get(`${BASE_URL}/report/${cleanedDomain}`);
     return response.data;
   }
@@ -44,7 +44,10 @@ export const fetchReport = createAsyncThunk(
 export const createReport = createAsyncThunk(
   'reports/createReport',
   async ({ domain, reportData }) => {
-    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const cleanedDomain =
+      typeof domain === 'string' && domain.endsWith('s')
+        ? domain.slice(0, -1)
+        : domain;
     const response = await axios.post(
       `${BASE_URL}/report/${cleanedDomain}`,
       reportData
@@ -66,7 +69,10 @@ export const fetchMyReporting = createAsyncThunk(
 export const fetchMyReported = createAsyncThunk(
   'reports/fetchMyReported',
   async ({ user_number, domain }) => {
-    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const cleanedDomain =
+      typeof domain === 'string' && domain.endsWith('s')
+        ? domain.slice(0, -1)
+        : domain;
     const response = await axios.get(
       `${BASE_URL}/user/${user_number}?domain=${cleanedDomain}`
     );
@@ -78,7 +84,10 @@ export const fetchMyReported = createAsyncThunk(
 export const processReport = createAsyncThunk(
   'reports/processReport',
   async ({ domain, NO, processData }) => {
-    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const cleanedDomain =
+      typeof domain === 'string' && domain.endsWith('s')
+        ? domain.slice(0, -1)
+        : domain;
     const response = await axios.put(
       `${BASE_URL}/process/${cleanedDomain}/${NO}`,
       processData
@@ -91,7 +100,10 @@ export const processReport = createAsyncThunk(
 export const fetchProcessedReport = createAsyncThunk(
   'reports/fetchProcessedReport',
   async ({ domain, NO }) => {
-    const cleanedDomain = domain.endsWith('s') ? domain.slice(0, -1) : domain;
+    const cleanedDomain =
+      typeof domain === 'string' && domain.endsWith('s')
+        ? domain.slice(0, -1)
+        : domain;
     const response = await axios.get(
       `${BASE_URL}/process/${cleanedDomain}/${NO}`
     );
@@ -127,7 +139,11 @@ const reportSlice = createSlice({
       .addCase(fetchProcessedReport.pending, handlePending)
 
       // 성공 처리
-      .addCase(fetchDetailReport.fulfilled, handleFulfilled)
+      .addCase(fetchDetailReport.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.reportManagement = action.payload;
+        state.items = action.payload;
+      })
       .addCase(fetchReport.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.items = action.payload;

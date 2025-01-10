@@ -11,8 +11,13 @@ import {
 const ReportDetailContent = () => {
   const { domain, NO } = useParams();
   const dispatch = useDispatch();
-  const reportData = useSelector((state) => state.reports.selectedReport);
-  const status = useSelector((state) => state.reports.status);
+  const reportData = useSelector(
+    (state) => state.reports.selectedReport?.reportManagement || {}
+  );
+
+  const management = useSelector((state) => state.reports.reportManagement);
+  console.log(reportData);
+  console.log(management);
 
   useEffect(() => {
     if (domain && NO) {
@@ -25,27 +30,27 @@ const ReportDetailContent = () => {
     }
   }, [dispatch, domain, NO]);
 
-  const getFields = (domain, reportData) => {
-    if (!reportData) return {};
+  const getFields = (domain, reportData, management) => {
+    if ((!reportData, !management)) return {};
     const fields = {
       // 각 도메인별 신고 필드를 정의
       feed_comments: {
         general: [
           {
             label: '접수 번호',
-            value: reportData.feed_comment_report_number,
+            value: management.feed_comment_report_number,
             readOnly: true,
           },
           { label: '신고 분류', value: '댓글', readOnly: true },
           {
             label: '신고자(아이디)',
-            value: reportData.user_id,
+            value: management.user_id,
             readOnly: true,
           },
-          { label: '처리 상태', value: reportData.state, readOnly: false },
+          { label: '처리 상태', value: management.state, readOnly: false },
           {
             label: '신고사유',
-            value: reportData.report_reason,
+            value: management.report_reason,
             readOnly: true,
           },
         ],
@@ -70,19 +75,19 @@ const ReportDetailContent = () => {
         general: [
           {
             label: '접수 번호',
-            value: reportData.post_comment_report_number,
+            value: management.post_comment_report_number,
             readOnly: true,
           },
           { label: '신고 분류', value: '댓글', readOnly: true },
           {
             label: '신고자(아이디)',
-            value: reportData.user_id,
+            value: management.user_id,
             readOnly: true,
           },
-          { label: '처리 상태', value: reportData.state, readOnly: false },
+          { label: '처리 상태', value: management.state, readOnly: false },
           {
             label: '신고사유',
-            value: reportData.report_reason,
+            value: management.report_reason,
             readOnly: true,
           },
         ],
@@ -111,19 +116,19 @@ const ReportDetailContent = () => {
         general: [
           {
             label: '접수 번호',
-            value: reportData.post_report_number,
+            value: management.post_report_number,
             readOnly: true,
           },
           { label: '신고 분류', value: '게시글', readOnly: true },
           {
             label: '신고자(아이디)',
-            value: reportData.user_id,
+            value: management.user_id,
             readOnly: true,
           },
-          { label: '처리 상태', value: reportData.state, readOnly: false },
+          { label: '처리 상태', value: management.state, readOnly: false },
           {
             label: '신고사유',
-            value: reportData.report_reason,
+            value: management.report_reason,
             readOnly: true,
           },
         ],
@@ -207,19 +212,19 @@ const ReportDetailContent = () => {
         general: [
           {
             label: '접수 번호',
-            value: reportData.feed_report_number,
+            value: management.feed_report_number,
             readOnly: true,
           },
           { label: '신고 분류', value: '피드', readOnly: true },
           {
             label: '신고자(아이디)',
-            value: reportData.user_id,
+            value: management.user_id,
             readOnly: true,
           },
-          { label: '처리 상태', value: reportData.state, readOnly: false },
+          { label: '처리 상태', value: management.state, readOnly: false },
           {
             label: '신고사유',
-            value: reportData.report_reason,
+            value: management.report_reason,
             readOnly: true,
           },
         ],
@@ -270,8 +275,8 @@ const ReportDetailContent = () => {
     return <Typography>신고 데이터를 불러올 수 없습니다.</Typography>;
   }
 
-  const fields = getFields(domain, reportData);
-
+  const fields = getFields(domain, reportData, management);
+  console.log(fields);
   if (!fields || Object.keys(fields).length === 0) {
     return <Box>해당 도메인의 신고 정보가 없습니다.</Box>;
   }
