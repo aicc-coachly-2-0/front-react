@@ -13,41 +13,25 @@ import { useTheme } from '@mui/material/styles';
 export const AccountSuspension = ({ reports }) => {
   const theme = useTheme();
 
-  const [reportList, setReportList] = useState(
-    reports.sort((a, b) => new Date(b.date) - new Date(a.date))
-  );
+  // 날짜를 기준으로 정렬하는 유틸리티 함수
+  const sortByDate = (array) =>
+    [...array].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const [reportList, setReportList] = useState(sortByDate(reports));
   const [suspensionReasons, setSuspensionReasons] = useState([]);
 
   const handleMoveToSuspension = (index) => {
     const selectedReport = reportList[index];
-    const updatedReportList = reportList.filter((_, i) => i !== index);
-    const updatedSuspensionReasons = [...suspensionReasons, selectedReport];
-
-    setReportList(
-      updatedReportList.sort((a, b) => new Date(b.date) - new Date(a.date))
-    );
-    setSuspensionReasons(
-      updatedSuspensionReasons.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      )
-    );
+    setReportList((prev) => sortByDate(prev.filter((_, i) => i !== index)));
+    setSuspensionReasons((prev) => sortByDate([...prev, selectedReport]));
   };
 
   const handleRemoveFromSuspension = (index) => {
     const removedReport = suspensionReasons[index];
-    const updatedSuspensionReasons = suspensionReasons.filter(
-      (_, i) => i !== index
+    setSuspensionReasons((prev) =>
+      sortByDate(prev.filter((_, i) => i !== index))
     );
-    const updatedReportList = [...reportList, removedReport];
-
-    setReportList(
-      updatedReportList.sort((a, b) => new Date(b.date) - new Date(a.date))
-    );
-    setSuspensionReasons(
-      updatedSuspensionReasons.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      )
-    );
+    setReportList((prev) => sortByDate([...prev, removedReport]));
   };
 
   return (
@@ -56,6 +40,7 @@ export const AccountSuspension = ({ reports }) => {
         계정 정지 관리
       </Typography>
       <Box display="flex" gap={3}>
+        {/* 신고 접수 내역 */}
         <Box
           flex={1}
           border="1px solid #e0e0e0"
@@ -66,31 +51,38 @@ export const AccountSuspension = ({ reports }) => {
           <Typography variant="subtitle1" fontWeight="bold" mb={1}>
             신고 접수 내역
           </Typography>
-          {reportList.map((report, index) => (
-            <Box
-              key={index}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={1}
-            >
-              <Box>
-                <Typography variant="body2">
-                  <strong>{report.date}</strong> - {report.reason} (
-                  {report.reporter})
-                </Typography>
-              </Box>
-              <IconButton
-                size="small"
-                onClick={() => handleMoveToSuspension(index)}
-                aria-label="Move to suspension"
+          {reportList.length > 0 ? (
+            reportList.map((report, index) => (
+              <Box
+                key={report.id} // 고유 ID 사용
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={1}
               >
-                <ArrowForwardIosIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          ))}
+                <Box>
+                  <Typography variant="body2">
+                    <strong>{report.date}</strong> - {report.reason} (
+                    {report.reporter})
+                  </Typography>
+                </Box>
+                <IconButton
+                  size="small"
+                  onClick={() => handleMoveToSuspension(index)}
+                  aria-label="Move to suspension"
+                >
+                  <ArrowForwardIosIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              신고 내역이 없습니다.
+            </Typography>
+          )}
         </Box>
 
+        {/* 정지 사유 등록 */}
         <Box
           flex={1}
           border="1px solid #e0e0e0"
@@ -101,37 +93,44 @@ export const AccountSuspension = ({ reports }) => {
           <Typography variant="subtitle1" fontWeight="bold" mb={1}>
             정지 사유 등록
           </Typography>
-          {suspensionReasons.map((report, index) => (
-            <Box
-              key={index}
-              mb={1}
-              p={1}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              bgcolor={
-                theme.palette.mode === 'dark'
-                  ? theme.palette.grey[800]
-                  : '#f9f9f9'
-              }
-              borderRadius="4px"
-            >
-              <Typography variant="body2" color="text.primary">
-                <strong>{report.date}</strong> - {report.reason} (
-                {report.reporter})
-              </Typography>
-              <Button
-                size="small"
-                color="error"
-                variant="contained"
-                onClick={() => handleRemoveFromSuspension(index)}
+          {suspensionReasons.length > 0 ? (
+            suspensionReasons.map((report, index) => (
+              <Box
+                key={report.id} // 고유 ID 사용
+                mb={1}
+                p={1}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                bgcolor={
+                  theme.palette.mode === 'dark'
+                    ? theme.palette.grey[800]
+                    : '#f9f9f9'
+                }
+                borderRadius="4px"
               >
-                제거
-              </Button>
-            </Box>
-          ))}
+                <Typography variant="body2" color="text.primary">
+                  <strong>{report.date}</strong> - {report.reason} (
+                  {report.reporter})
+                </Typography>
+                <Button
+                  size="small"
+                  color="error"
+                  variant="contained"
+                  onClick={() => handleRemoveFromSuspension(index)}
+                >
+                  제거
+                </Button>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              정지 사유가 없습니다.
+            </Typography>
+          )}
         </Box>
 
+        {/* 정지 관리 */}
         <Box
           flex={1}
           display="flex"
