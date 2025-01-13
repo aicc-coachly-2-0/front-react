@@ -10,28 +10,47 @@ export const fetchQnas = createAsyncThunk('qnas/fetchQnas', async () => {
 });
 
 // 단일 질문 조회
-export const fetchQuestionDetail = createAsyncThunk('qnas/fetchQuestionDetail', async (question_number) => {
-  const response = await axios.get(`${BASE_URL}/questions/${question_number}`);
-  return response.data;
-});
+export const fetchQuestionDetail = createAsyncThunk(
+  'qnas/fetchQuestionDetail',
+  async (question_number) => {
+    const response = await axios.get(
+      `${BASE_URL}/questions/${question_number}`
+    );
+    return response.data;
+  }
+);
 
 // 답변 작성
-export const createAnswer = createAsyncThunk('qnas/createAnswer', async (answerData) => {
-  const response = await axios.post(`${BASE_URL}/answers`, answerData);
-  return response.data;
-});
+export const createAnswer = createAsyncThunk(
+  'qnas/createAnswer',
+  async (answerData) => {
+    const response = await axios.post(`${BASE_URL}/answers`, answerData);
+    return response.data;
+  }
+);
 
 // 답변 조회 (질문별)
-export const fetchAnswersByQuestion = createAsyncThunk('qnas/fetchAnswersByQuestion', async (question_number) => {
-  const response = await axios.get(`${BASE_URL}/questions/${question_number}/answers`);
-  return response.data;
-});
+export const fetchAnswersByQuestion = createAsyncThunk(
+  'qnas/fetchAnswersByQuestion',
+  async (question_number) => {
+    const response = await axios.get(
+      `${BASE_URL}/questions/${question_number}/answers`
+    );
+    return response.data;
+  }
+);
 
 // 답변 수정
-export const updateAnswer = createAsyncThunk('qnas/updateAnswer', async ({ answer_number, answerData }) => {
-  const response = await axios.put(`${BASE_URL}/answers/${answer_number}`, answerData);
-  return response.data;
-});
+export const updateAnswer = createAsyncThunk(
+  'qnas/updateAnswer',
+  async ({ answer_number, answerData }) => {
+    const response = await axios.put(
+      `${BASE_URL}/answers/${answer_number}`,
+      answerData
+    );
+    return response.data;
+  }
+);
 
 const qnaSlice = createSlice({
   name: 'qnas',
@@ -103,7 +122,9 @@ const qnaSlice = createSlice({
       })
       .addCase(updateAnswer.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const index = state.answers.findIndex(answer => answer.answer_number === action.payload.answer_number);
+        const index = state.answers.findIndex(
+          (answer) => answer.answer_number === action.payload.answer_number
+        );
         if (index !== -1) {
           state.answers[index] = action.payload;
         }

@@ -4,7 +4,7 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8000/user';
 
 // 유저 목록 조회
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
+export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
   const response = await axios.get(`${BASE_URL}`);
   return response.data;
 });

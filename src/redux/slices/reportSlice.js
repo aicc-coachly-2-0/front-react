@@ -21,9 +21,7 @@ export const fetchDetailReport = createAsyncThunk(
       typeof domain === 'string' && domain.endsWith('s')
         ? domain.slice(0, -1)
         : domain;
-    const response = await axios.get(
-      `${BASE_URL}/report/${cleanedDomain}/${NO}`
-    );
+    const response = await axios.get(`${BASE_URL}/${cleanedDomain}/${NO}`);
     return response.data;
   }
 );
@@ -36,7 +34,7 @@ export const fetchReport = createAsyncThunk(
       typeof domain === 'string' && domain.endsWith('s')
         ? domain.slice(0, -1)
         : domain;
-    const response = await axios.get(`${BASE_URL}/report/${cleanedDomain}`);
+    const response = await axios.get(`${BASE_URL}/${cleanedDomain}`);
     return response.data;
   }
 );
@@ -49,7 +47,7 @@ export const createReport = createAsyncThunk(
         ? domain.slice(0, -1)
         : domain;
     const response = await axios.post(
-      `${BASE_URL}/report/${cleanedDomain}`,
+      `${BASE_URL}/${cleanedDomain}`,
       reportData
     );
     return response.data;
@@ -89,7 +87,7 @@ export const processReport = createAsyncThunk(
         ? domain.slice(0, -1)
         : domain;
     const response = await axios.put(
-      `${BASE_URL}/process/${cleanedDomain}/${NO}`,
+      `${BASE_URL}/${cleanedDomain}/${NO}`,
       processData
     );
     return response.data;
@@ -104,9 +102,7 @@ export const fetchProcessedReport = createAsyncThunk(
       typeof domain === 'string' && domain.endsWith('s')
         ? domain.slice(0, -1)
         : domain;
-    const response = await axios.get(
-      `${BASE_URL}/process/${cleanedDomain}/${NO}`
-    );
+    const response = await axios.get(`${BASE_URL}/${cleanedDomain}/${NO}`);
     return response.data;
   }
 );

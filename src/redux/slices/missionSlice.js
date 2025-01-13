@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const BASE_URL = '/missions';
+const BASE_URL = 'http://localhost:8000/missions';
 
 // 미션 생성
 export const createMission = createAsyncThunk(
